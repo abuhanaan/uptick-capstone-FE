@@ -7,11 +7,15 @@
     @apply max-w-[90%] 2xl:max-w-[1300px] mx-auto;
   }
 
+  img {
+    max-width: 100%;
+  }
+
   .btn-filled {
-    @apply bg-primary-blue text-white px-[18px] py-[10px] rounded-md  flex items-center justify-center;
+    @apply bg-primary-blue text-xs text-white px-[14px] py-[8px] rounded-md  flex items-center justify-center;
   }
 
   .btn-outlined {
-    @apply bg-transparent text-white px-[18px] py-[10px] rounded-md  flex items-center justify-center border-[1px] border-neutral border-solid;
+    @apply bg-transparent text-xs  text-white px-[14px] py-[8px] rounded-md  flex items-center justify-center border-[1px] border-neutral border-solid;
   }
 }
