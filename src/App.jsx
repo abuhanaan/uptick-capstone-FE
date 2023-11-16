@@ -11,6 +11,9 @@ import { SubmitApplication } from "./components/SubmitApplication";
 import { SoftwareEngineering } from "./pages/programs/SoftwareEngineering";
 import { UiUxDesign } from "./pages/programs/UiUxDesign";
 import { ProjectProduct } from "./pages/programs/ProjectProduct";
+import Login from "./pages/admin/Login";
+import AdminHome from "./pages/admin/Home";
+import AdminJobs from "./pages/admin/Jobs";
 
 function App() {
   return (
@@ -19,8 +22,11 @@ function App() {
       <Sidebar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/jobs" element={<AdminJobs />} />
         <Route path="/jobs" element={<Jobs />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/jobs/:id" element={<JobDetails />} /> 
         <Route path="/submit-application" element={<SubmitApplication />} />
         <Route
           path="/programs/software-engineering"
