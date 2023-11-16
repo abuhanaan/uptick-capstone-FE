@@ -4,7 +4,7 @@ import { ProgramCard } from "../../../components/ProgramCard";
 
 export const OurPrograms = () => {
   return (
-    <div className="py-14 bg-fair">
+    <div className="py-20 bg-fair">
       <div className="container">
         <h2 className="text-xl md:text-4xl text-white">Our Programs</h2>
 

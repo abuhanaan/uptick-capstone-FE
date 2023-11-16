@@ -14,6 +14,8 @@ export default {
         "program-bg": "#1e1e1e",
         "light-blue": "#1C3166",
         "testimonial-bg": "#edf2ff",
+        "neutral-10": "#e6e6e6",
+        "neutral-6": "#808080",
       },
     },
   },

@@ -5,7 +5,7 @@ export const BlogCard = ({ blog }) => {
   return (
     <div className="bg-program-bg border-[1px] border-light-blue border-solid rounded-md p-3 md:p-5">
       <div>
-        <img src={blog.img} alt="Blog img" />
+        <img style={{ width: "100%" }} src={blog.img} alt="Blog img" />
       </div>
 
       <div className="flex flex-col gap-3 mt-3">

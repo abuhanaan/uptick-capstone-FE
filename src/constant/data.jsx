@@ -76,3 +76,27 @@ export const blogs = [
     text: "We discuss MarketForce downscaling operations in African markets and Jasco's partnership with Freshworks....",
   },
 ];
+
+export const jobs = [
+  {
+    id: 1,
+    img: "/images/software-developer.png",
+    title: "Software Engineer (Backend)",
+    desc: "We’re looking for exceptional software engineers to join our team in doing the hard work that makes our users’ lives easy. We run on a mix of Clojure and JavaScript (and TypeScript), and the ideal candidate has shipped production code in one or more of these languages...",
+    due: "18th Nov 2023",
+  },
+  {
+    id: 2,
+    img: "/images/software-developer.png",
+    title: "Software Engineer (Frontend)",
+    desc: "We’re looking for exceptional software engineers to join our team in doing the hard work that makes our users’ lives easy. We run on a mix of Clojure and JavaScript (and TypeScript), and the ideal candidate has shipped production code in one or more of these languages...",
+    due: "18th Nov 2023",
+  },
+  {
+    id: 3,
+    img: "/images/software-developer.png",
+    title: "Software Engineer (Mobile Developer)",
+    desc: "We’re looking for exceptional software engineers to join our team in doing the hard work that makes our users’ lives easy. We run on a mix of Clojure and JavaScript (and TypeScript), and the ideal candidate has shipped production code in one or more of these languages...",
+    due: "18th Nov 2023",
+  },
+];
