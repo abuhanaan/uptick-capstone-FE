@@ -16,6 +16,7 @@ export default {
         "testimonial-bg": "#edf2ff",
         "neutral-10": "#e6e6e6",
         "neutral-6": "#808080",
+        "light-slate-gray": " rgba(255, 255, 255, 1)",
       },
     },
   },
