@@ -15,6 +15,9 @@ import Login from "./pages/admin/Login";
 import AdminHome from "./pages/admin/home/Home";
 import AdminJobs from "./pages/admin/jobs/Jobs";
 import { CreateJobView } from "./pages/admin/jobs/CreateJobView";
+import Programs from "./pages/admin/programs/Programs";
+import ProgramDetails from "./pages/admin/programs/ProgramDetails";
+import CreateProgram from "./pages/admin/programs/CreateProgram";
 
 function App() {
   return (
@@ -27,6 +30,11 @@ function App() {
         <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/jobs" element={<AdminJobs />} />
         <Route path="/admin/jobs/create" element={<CreateJobView />} />
+
+        <Route path="/admin/programs" element={<Programs />} />
+        <Route path="/admin/programs/create" element={<CreateProgram />} />
+        <Route path="/admin/programs/:id" element={<ProgramDetails />} />
+        
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/submit-application" element={<SubmitApplication />} />
