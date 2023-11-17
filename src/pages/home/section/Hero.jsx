@@ -1,5 +1,6 @@
 import React from "react";
-import { Button } from "../../../components/Button";
+
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -19,9 +20,17 @@ const Hero = () => {
             solutions.
           </p>
 
-          <div className="flex flex-col md:flex-row gap-5">
-            <Button type="filled" text="Explore Our Programme" />
-            <Button type="outlined" text="Apply For Jobs" />
+          <div className="flex flex-col md:flex-row items-center gap-5">
+            <Link to="">
+              <button className="bg-primary-blue text-sm text-white px-[16px] py-[10px] rounded-md  flex items-center justify-center">
+                Explore Our Programme
+              </button>
+            </Link>
+            <Link to="">
+              <button className="bg-transparent text-xs  text-white px-[16px] py-[10px] rounded-md  flex items-center justify-center border-[1px] border-neutral border-solid">
+                Explore Our Programme
+              </button>
+            </Link>
           </div>
         </div>
       </div>
