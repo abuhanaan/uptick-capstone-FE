@@ -6,7 +6,7 @@ const AdminSideBar = () => {
   let { adminSidebarOpen } = useAppContext();
 
   const sidebarItems = [
-    { label: "Home", link: "/admin/home" },
+    { label: "Home", link: "/admin" },
     { label: "Jobs", link: "/admin/jobs" },
     { label: "Applications", link: "/admin/applications" },
     { label: "Programs", link: "/admin/programs" },
