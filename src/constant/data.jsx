@@ -100,3 +100,42 @@ export const jobs = [
     due: "18th Nov 2023",
   },
 ];
+
+export const talentTechPrograms = [
+  {
+    id: 1,
+    title: 'Software Engineering',
+    subTitle: 'Become a Top 1% Engineer',
+    desc: 'Our immersive, project-based approach, combined with mentorship-led learning, is designed to transform self-taught developers into top-tier engineers. Gain real-world internship experience and unlock your potential. Join our Software Engineering Fellowship and explore four specialized tracks:',
+    secDesc: '',
+    imgUrl: '/images/program-se.png',
+    tracks: ['Frontend', 'Backend', 'Mobile', 'Fullstack'],
+  },
+  {
+    id: 2,
+    title: 'AI & Data',
+    subTitle: 'Become a Top 1% Engineer',
+    desc: 'Explore the limitless possibilities of AI and data engineering through our comprehensive fellowship programs. From data science to machine learning, data analysis to core data engineering, we offer a diverse range of opportunities. Join us and become part of a community that is building the future:',
+    secDesc: 'Our AI & Data Engineering Fellowship is your gateway to becoming a data scientist, data engineer, analyst, or AI engineer. Learn, collaborate, and build the future with Uptick Talent.',
+    imgUrl: '/images/program-ai.png',
+    tracks: ['Data Science', 'Machine Learning', 'Data Analysis', 'Data Engineering'],
+  },
+  {
+    id: 3,
+    title: 'Design',
+    subTitle: 'Unleash Your Creative Genius',
+    desc: 'Explore the art of design through our design program, which cuts across critical concepts such as design thinking, systems thinking, design systems & design engineering, and unlock your creative potential and shape user experiences. Choose from a variety of core tracks, including:',
+    secDesc: '',
+    imgUrl: '/images/program-design.png',
+    tracks: ['UI Design', 'UX Design', 'Graphics Design', 'UX Research'],
+  },
+  {
+    id: 4,
+    title: 'Non-Technical Programs',
+    subTitle: 'Master the Art of Scaling Technology Products',
+    desc: 'Our Non-Technical Fellowship programs are designed for business enthusiasts working to scale technology products, processes and operations. Dive into practical case studies and access weekly mentorship. Curriculum covers:',
+    secDesc: '',
+    imgUrl: '/images/program-non-tech.png',
+    tracks: ['Product Marketing Management', 'Operations', 'Sales', 'Business Development', 'Project/Product Management'],
+  }
+];
