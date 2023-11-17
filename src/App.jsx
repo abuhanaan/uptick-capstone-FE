@@ -12,8 +12,9 @@ import { SoftwareEngineering } from "./pages/programs/SoftwareEngineering";
 import { UiUxDesign } from "./pages/programs/UiUxDesign";
 import { ProjectProduct } from "./pages/programs/ProjectProduct";
 import Login from "./pages/admin/Login";
-import AdminHome from "./pages/admin/Home";
-import AdminJobs from "./pages/admin/Jobs";
+import AdminHome from "./pages/admin/home/Home";
+import AdminJobs from "./pages/admin/jobs/Jobs";
+import { CreateJobView } from "./pages/admin/jobs/CreateJobView";
 
 function App() {
   return (
@@ -25,8 +26,9 @@ function App() {
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/jobs" element={<AdminJobs />} />
+        <Route path="/admin/jobs/create" element={<CreateJobView />} />
         <Route path="/jobs" element={<Jobs />} />
-        <Route path="/jobs/:id" element={<JobDetails />} /> 
+        <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/submit-application" element={<SubmitApplication />} />
         <Route
           path="/programs/software-engineering"
