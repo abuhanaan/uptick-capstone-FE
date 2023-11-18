@@ -120,7 +120,7 @@ export const JobView = () => {
       </div>
 
       <ViewJobDetails />
-      <DeleteModal onClick={toggleDeleteModal} />
+      <DeleteModal onClick={toggleDeleteModal} item='job' />
     </div>
   );
 };
