@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { GrFormView } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import { ViewJobDetails } from "../jobs/ViewJobDetails";
+import ProgramDetails from "./ProgramDetails";
 import { useAppContext } from "../../../context/AppContext";
 import { DeleteModal } from "../components/DeleteModal";
 import { Button } from "../../../components/Button";
@@ -20,7 +20,7 @@ const Programs = () => {
                 'CSS, the language used to style web pages',
                 'JavaScript, the scripting language used to create dynamic functionality on the web',
                 'Tooling that is used to facilitate modern client-side web development.'],
-            objectives: 'we will provide you with a structured course that will teach you all you need to know to become a front-end web developer. Work through each section, learning new skills (or improving existing ones) as you go along.',
+            objectives: 'We will provide you with a structured course that will teach you all you need to know to become a front-end web developer. Work through each section, learning new skills (or improving existing ones) as you go along.',
             benefits: 'There are good career benefits of doing a course in front-end development. Front-end developers have good job prospects in the fields of advertising, freelancing, publishing, manufacturers, design studios, departmental stores, printing and typesetting industries, educational institutions, and even government companies.',
             prerequisites: "You don't need any previous knowledge to start this course. All you need is a computer that can run modern web browsers, an internet connection, and a willingness to learn.",
             duration: '6 months',
@@ -61,7 +61,7 @@ const Programs = () => {
                         <thead>
                             <tr className="w-full border-solid border-neutral border-b-[1px]">
                                 <th className="w-1/12 text-left text-xs font-bold">ID</th>
-                                <th className="w-3/12 text-left text-xs font-bold">Name</th>
+                                <th className="w-2/12 text-left text-xs font-bold">Name</th>
                                 <th className="w-4/12 text-left text-xs font-bold">
                                     Description
                                 </th>
@@ -72,7 +72,7 @@ const Programs = () => {
                                     Start Date
                                 </th>
                                 <th className="w-1/12 text-left text-xs font-bold">End Date</th>
-                                <th className="w-1/12 text-left text-xs font-bold">Actions</th>
+                                <th className="w-2/12 text-left text-xs font-bold">Actions</th>
                             </tr>
                         </thead>
 
@@ -111,7 +111,7 @@ const Programs = () => {
                     </table>
 
                     <div className="mt-14 flex items-center justify-end gap-8">
-                        <Link to="/admin/jobs/create">
+                        <Link to="/admin/programs/create">
                             <Button text='Create Program' type='filled'></Button>
                         </Link>
 
@@ -140,8 +140,8 @@ const Programs = () => {
                 </div>
             </div>
 
-            <ViewJobDetails />
-            <DeleteModal onClick={toggleDeleteModal} />
+            <ProgramDetails />
+            <DeleteModal onClick={toggleDeleteModal} item='program' />
         </div>
     )
 }
