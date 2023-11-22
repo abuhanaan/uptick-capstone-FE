@@ -1,5 +1,4 @@
-import React from 'react';
-import SideNav from '../ui/dashboard/sidenav';
+import SideNav from '/app/components/sidenav';
 
 const Layout = ({children}) => {
   return (
