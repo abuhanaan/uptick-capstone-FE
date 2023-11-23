@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
 
-                <div className='flex-grow p-6 md:p-12 md:overflow-y-auto bg-[#EDF2FF]'>
+                <div className='flex-grow flex-1 h-full p-6 md:pb-8 md:pt-4 md:overflow-y-auto bg-[#EDF2FF]'>
                     {children}
                 </div>
             </div>
