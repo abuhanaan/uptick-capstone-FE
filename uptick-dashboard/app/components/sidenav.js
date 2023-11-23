@@ -4,7 +4,7 @@ import Navbar from './navbar';
 
 export default function SideNav() {
     return (
-        <div className="flex h-full flex-col bg-[#14141E] py-4 md:px-2">
+        <div className="flex h-full w-full flex-col bg-[#14141E] py-4 md:px-2">
             <Navbar />
             <NavLinks />
         </div>
