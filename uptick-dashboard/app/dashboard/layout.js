@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const Layout = ({ children }) => {
     return (
-        <div className='flex flex-col h-screen md:flex-row md:overflow-hidden'>
+        <div className='flex flex-col min-h-screen md:flex-row md:overflow-hidden'>
             <div className='w-full flex-none md:w-64'>
                 <SideNav />
             </div>
@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
 
-                <div className='flex-grow flex-1 h-full p-6 md:pb-8 md:pt-4 md:overflow-y-auto bg-[#EDF2FF]'>
+                <div className='flex-1 min-h-full overflow-y-auto p-6 md:pb-8 md:pt-4 bg-[#EDF2FF]'>
                     {children}
                 </div>
             </div>
