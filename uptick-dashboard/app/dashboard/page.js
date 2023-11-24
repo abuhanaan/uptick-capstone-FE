@@ -2,16 +2,17 @@ import OverviewCard from "../components/overview-card";
 import { RiEditBoxLine } from "react-icons/ri";
 import { PiToolbox } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi";
+import PieChart from '../components/pie-chart';
 
 const Dashboard = () => {
     return (
-        <section className="">
+        <section className="overflow-x-auto">
             <div>
                 <h1 className="text-2xl font-bold leading-8">Welcome, Admin</h1>
                 <span className="text-sm">Monday, 6th Nov. 2023</span>
             </div>
 
-            <div className="flex flex-col sm:flex-wrap md:flex-row mt-5 gap-4">
+            <div className="flex flex-col sm:flex-wrap md:flex-row mt-5 gap-4 overflow-x-auto">
                 <OverviewCard type='Programs' total='200' accepted='150' rejected='150' pending='150'>
                     <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
                         <RiEditBoxLine size={20} />
@@ -31,7 +32,7 @@ const Dashboard = () => {
                 </OverviewCard>
             </div>
 
-            <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-4 mt-6 overflow-x-auto">
                 <h2 className="font-bold text-lg text-[#15254C]">Recent Applicants</h2>
 
                 <div className="overflow-x-auto">
@@ -92,79 +93,81 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-between mt-9">
-                <div className="grow">Pie Chart here</div>
+            <div className="flex flex-col-reverse items-stretch gap-8 lg:flex-row mt-9 overflow-x-auto">
+                <PieChart />
 
-                <div className="overflow-x-auto flex-1 min-w-1/3">
+                <div className="flex-2 lg:ml-auto">
                     <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1 mb-2">Recent Jobs</h2>
-                    <table className="table">
-                        <tbody className="flex flex-col gap-2">
-                            <tr className="bg-white">
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle w-6 h-6">
-                                                <img src="/images/job-logo.png" alt="Kuda logo" />
+                    <div className="overflow-x-auto">
+                        <table className="table table-lg lg:table-md">
+                            <tbody className="flex flex-col gap-2">
+                                <tr className="bg-white">
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-6 h-6">
+                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">Kuda</div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="font-bold">Kuda</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    UI/UX Designer
-                                </td>
-                                <td>100</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
-                            <tr className="bg-white">
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle w-6 h-6">
-                                                <img src="/images/job-logo.png" alt="Kuda logo" />
+                                    </td>
+                                    <td>
+                                        UI/UX Designer
+                                    </td>
+                                    <td>100</td>
+                                    <th>
+                                        <button className="btn btn-ghost btn-xs">Details</button>
+                                    </th>
+                                </tr>
+                                <tr className="bg-white">
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-6 h-6">
+                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">Spark</div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="font-bold">Spark</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Software Engineer
-                                </td>
-                                <td>200</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
-                            <tr className="bg-white">
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle w-6 h-6">
-                                                <img src="/images/job-logo.png" alt="Kuda logo" />
+                                    </td>
+                                    <td>
+                                        Software Engineer
+                                    </td>
+                                    <td>200</td>
+                                    <th>
+                                        <button className="btn btn-ghost btn-xs">Details</button>
+                                    </th>
+                                </tr>
+                                <tr className="bg-white">
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-6 h-6">
+                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">Google</div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="font-bold">Google</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Data Analyst
-                                </td>
-                                <td>300</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        Data Analyst
+                                    </td>
+                                    <td>300</td>
+                                    <th>
+                                        <button className="btn btn-ghost btn-xs">Details</button>
+                                    </th>
+                                </tr>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
