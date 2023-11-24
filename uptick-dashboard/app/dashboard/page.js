@@ -3,8 +3,34 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { PiToolbox } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import PieChart from '../components/pie-chart';
+import Link from 'next/link';
 
 const Dashboard = () => {
+    const cardData = [
+        { type: 'Programs', total: 200, accepted: 150, rejected: 150, pending: 150, icon: RiEditBoxLine },
+        { type: 'Jobs', total: 200, accepted: 150, rejected: 150, pending: 150, icon: PiToolbox },
+        { type: 'Startups', total: 200, accepted: 150, rejected: 150, pending: 150, icon: HiOutlineUserGroup }
+    ];
+
+    const recentApplicationData = [
+        { name: 'Chris', application: 'Program', appliedDate: '6/11/2023', status: 'Pending' },
+        { name: 'John', application: 'Job', appliedDate: '6/11/2023', status: 'Accepted' },
+        { name: 'Martha', application: 'Program', appliedDate: '6/11/2023', status: 'Pending' },
+        { name: 'Angelina', application: 'Job', appliedDate: '6/11/2023', status: 'Rejected' }
+    ];
+
+    const recentJobs = [
+        { company: 'Kuda', role: 'UI/UX Designer', salary: '100' },
+        { company: 'Spark', role: 'Software Engineer', salary: '200' },
+        { company: 'Google', role: 'Data Analyst', salary: '300' },
+    ];
+
+    const chartData = {
+        labels: ['120 < 1 year', '150 < 3 years', '100 3+ years'],
+        data: [120, 150, 100],
+        bgColor: ['#0E1933', '#2B4A99', '#A3BDFF']
+    };
+
     return (
         <section className="overflow-x-auto">
             <div>
@@ -13,23 +39,18 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-col sm:flex-wrap md:flex-row mt-5 gap-4 overflow-x-auto">
-                <OverviewCard type='Programs' total='200' accepted='150' rejected='150' pending='150'>
-                    <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
-                        <RiEditBoxLine size={20} />
-                    </div>
-                </OverviewCard>
-
-                <OverviewCard type='Jobs' total='200' accepted='150' rejected='150' pending='150'>
-                    <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
-                        <PiToolbox size={20} />
-                    </div>
-                </OverviewCard>
-
-                <OverviewCard type='Startups' total='200' accepted='150' rejected='150' pending='150' color={{ bg: '#DAE5FF', text: '#243E80' }}>
-                    <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
-                        <HiOutlineUserGroup size={20} />
-                    </div>
-                </OverviewCard>
+                {
+                    cardData.map(data => {
+                        const CardIcon = data.icon;
+                        return (
+                            <OverviewCard key={data} type={data.type} total={data.total} accepted={data.accepted} rejected={data.rejected} pending={data.pending}>
+                                <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
+                                    <CardIcon size={20} />
+                                </div>
+                            </OverviewCard>
+                        )
+                    })
+                }
             </div>
 
             <div className="flex flex-col gap-4 mt-6 overflow-x-auto">
@@ -48,123 +69,57 @@ const Dashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* row 1 */}
-                            <tr className="bg-white">
-                                <td>Chris</td>
-                                <td>Program</td>
-                                <td>6/11/2023</td>
-                                <td>Pending</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
-                            {/* row 2 */}
-                            <tr>
-                                <td>John</td>
-                                <td>Job</td>
-                                <td>6/11/2023</td>
-                                <td>Pending</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
-                            {/* row 3 */}
-                            <tr className="bg-white">
-                                <td>Martha</td>
-                                <td>Program</td>
-                                <td>6/11/2023</td>
-                                <td>Pending</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
-                            {/* row 4 */}
-                            <tr>
-                                <td>Angelina</td>
-                                <td>Job</td>
-                                <td>6/11/2023</td>
-                                <td>Pending</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Details</button>
-                                </th>
-                            </tr>
+                            {
+                                recentApplicationData.map(app => (
+                                    <tr key={app} className="bg-white">
+                                        <td>{app.name}</td>
+                                        <td>{app.application}</td>
+                                        <td>{app.appliedDate}</td>
+                                        <td>{app.status}</td>
+                                        <th>
+                                            <Link href='#' className="btn btn-ghost btn-xs">Details</Link>
+                                        </th>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <div className="flex flex-col-reverse items-stretch gap-8 lg:flex-row mt-9 overflow-x-auto">
-                <PieChart />
+                <PieChart chartData={chartData} />
 
                 <div className="flex-2 lg:ml-auto">
                     <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1 mb-2">Recent Jobs</h2>
                     <div className="overflow-x-auto">
                         <table className="table table-lg lg:table-md">
                             <tbody className="flex flex-col gap-2">
-                                <tr className="bg-white">
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-6 h-6">
-                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                {
+                                    recentJobs.map(job => (
+                                        <tr key={job} className="bg-white">
+                                            <td className="w-2/6">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="avatar">
+                                                        <div className="mask mask-squircle w-6 h-6">
+                                                            <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold">{job.company}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <div className="font-bold">Kuda</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        UI/UX Designer
-                                    </td>
-                                    <td>100</td>
-                                    <th>
-                                        <button className="btn btn-ghost btn-xs">Details</button>
-                                    </th>
-                                </tr>
-                                <tr className="bg-white">
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-6 h-6">
-                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="font-bold">Spark</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        Software Engineer
-                                    </td>
-                                    <td>200</td>
-                                    <th>
-                                        <button className="btn btn-ghost btn-xs">Details</button>
-                                    </th>
-                                </tr>
-                                <tr className="bg-white">
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-6 h-6">
-                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="font-bold">Google</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        Data Analyst
-                                    </td>
-                                    <td>300</td>
-                                    <th>
-                                        <button className="btn btn-ghost btn-xs">Details</button>
-                                    </th>
-                                </tr>
-
+                                            </td>
+                                            <td className="w-2/6">
+                                                {job.role}
+                                            </td>
+                                            <td className="w-1/6">{job.salary}</td>
+                                            <th className="w-1/6">
+                                                <Link href='#' className="btn btn-ghost btn-xs">Details</Link>
+                                            </th>
+                                        </tr>
+                                    ))
+                                }
                             </tbody>
                         </table>
                     </div>

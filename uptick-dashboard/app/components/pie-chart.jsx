@@ -3,9 +3,10 @@
 import Chart from 'chart.js/auto';
 import { useRef, useEffect } from 'react';
 
-const PieChart = () => {
+const PieChart = ({ chartData }) => {
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
+    const {labels, data, bgColor} = chartData;
 
     useEffect(() => {
         if (chartInstance.current) {
@@ -17,16 +18,12 @@ const PieChart = () => {
         chartInstance.current = new Chart(pieChartRef, {
             type: 'pie',
             data: {
-                labels: ['120 < 1 year', '150 < 3 years', '100 3+ years'],
+                labels,
                 datasets: [
                     {
                         // label: 'My First Dataset',
-                        data: [120, 150, 100],
-                        backgroundColor: [
-                            '#0E1933',
-                            '#2B4A99',
-                            '#A3BDFF'
-                        ],
+                        data,
+                        backgroundColor: [...bgColor],
                         hoverOffset: 4
                     }
                 ]
