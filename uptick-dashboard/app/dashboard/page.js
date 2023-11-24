@@ -1,8 +1,8 @@
-import OverviewCard from "../components/overview-card";
+import OverviewCard from "../components/dashboard/overview-card";
 import { RiEditBoxLine } from "react-icons/ri";
 import { PiToolbox } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi";
-import PieChart from '../components/pie-chart';
+import PieChart from '../components/dashboard/pie-chart';
 import Link from 'next/link';
 
 const Dashboard = () => {

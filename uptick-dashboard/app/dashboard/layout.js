@@ -1,6 +1,5 @@
-import SideNav from '/app/components/sidenav';
+import SideNav from '/app/components/dashboard/sidenav';
 import { FaRegBell } from "react-icons/fa";
-import { GoDotFill } from "react-icons/go";
 import { HiUser } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import clsx from 'clsx';
