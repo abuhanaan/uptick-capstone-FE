@@ -5,10 +5,10 @@ import Link from 'next/link';
 
 const TalentTech = () => {
     const programsData = [
-        { title: 'Software Engineering', totalApplicants: 200 },
-        { title: 'Design', totalApplicants: 200 },
-        { title: 'Project Management', totalApplicants: 200 },
-        { title: 'AI & Data', totalApplicants: 200 }
+        { id: 1, slug: 'software-engineering', title: 'Software Engineering', totalApplicants: 200 },
+        { id: 2, slug: 'design', title: 'Design', totalApplicants: 200 },
+        { id: 3, slug: 'project-management', title: 'Project Management', totalApplicants: 200 },
+        { id: 4, slug: 'ai-data', title: 'AI & Data', totalApplicants: 200 }
     ];
 
     return (
@@ -17,7 +17,7 @@ const TalentTech = () => {
                 <h1 className="text-[#15254C] text-2xl font-bold">Talent Tech</h1>
 
                 <Link href='#' className="btn bg-[#477BFF] text-white">
-                    <HiOutlinePlus className="stroke-2" />
+                    <HiOutlinePlus size={20} className="stroke-2" />
                     Add New
                 </Link>
             </div>
@@ -35,8 +35,8 @@ const TalentTech = () => {
                         <tbody className="">
                             {
                                 programsData.map(program => (
-                                    <tr key={program} className="bg-white">
-                                        <td className="py-1">{program.title}</td>
+                                    <tr key={program.id} className="bg-white">
+                                        <td className="py-1"><Link href={`/dashboard/programs/tech/${program.slug}`}>{program.title}</Link></td>
                                         <td className="py-1">{program.totalApplicants}</td>
                                         <th className="py-1">
                                             <div className="dropdown dropdown-end">
@@ -44,9 +44,9 @@ const TalentTech = () => {
                                                     <HiOutlineEllipsisVertical />
                                                 </label>
                                                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                    <li><a>Item 1</a></li>
-                                                    <li><a>Item 2</a></li>
-                                                    <li><a>Item 2</a></li>
+                                                    <li><Link href={`/dashboard/programs/tech/${program.id}`}>View Applicants</Link></li>
+                                                    <li><Link href='#'>Open Application</Link></li>
+                                                    <li><Link href='#'>Close Application</Link></li>
                                                 </ul>
                                             </div>
                                         </th>
