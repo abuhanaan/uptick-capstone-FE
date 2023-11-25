@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import clsx from 'clsx';
+import ShowModalBtn from './show-modal-btn';
+import ModalBox from './modal-box';
 
 const Program = ({ params }) => {
     const applicants = [
@@ -64,7 +66,7 @@ const Program = ({ params }) => {
                                         </td>
                                         <td className="">{applicant.date}</td>
                                         <th className="text-end">
-                                            <button className='bg-[#B5CAFF] px-2 py-3 font-normal'>View Details</button>
+                                                <ShowModalBtn />
                                         </th>
                                     </tr>
                                 ))
@@ -81,6 +83,11 @@ const Program = ({ params }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Applicant's Details Modal */}
+            <dialog id="applicant-details-modal" className="modal">
+                <ModalBox />
+            </dialog>
         </div>
     )
 }
