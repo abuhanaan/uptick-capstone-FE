@@ -1,4 +1,10 @@
+'use client';
+
+import { useState } from "react";
+
 const ModalBox = () => {
+    const [accepted, setAccepted] = useState(false);
+
     return (
         <div className="modal-box">
             <form method="dialog">
@@ -83,7 +89,7 @@ const ModalBox = () => {
 
                 <div className="flex items-center gap-4 text-sm mt-4">
                     <div className="flex items-center gap-x-2">
-                        <input type="radio" name="radio-1" className="radio" checked /> Accept
+                        <input type="radio" name="radio-1" className="radio" /> Accept
                     </div>
 
                     <div className="flex items-center gap-x-2">
