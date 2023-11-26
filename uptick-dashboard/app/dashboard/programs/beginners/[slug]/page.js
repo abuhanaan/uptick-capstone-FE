@@ -24,8 +24,8 @@ const Program = ({ params }) => {
             <div className="flex flex-col items-start gap-y-2 lg:flex-row lg:justify-between lg:items-center lg:mb-6">
                 <div className="text-2xl breadcrumbs font-bold">
                     <ul>
-                        <li className='text-[#C8D7FF]'><Link href='/dashboard/programs/tech'>Talent Tech</Link></li>
-                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle}</Link></li>
+                        <li className='text-[#C8D7FF]'><Link href='/dashboard/programs/beginners'>Talent Beginners</Link></li>
+                        <li><Link href={`/dashboard/programs/beginners/${params.slug}`} className='capitalize'>{programTitle}</Link></li>
                     </ul>
                 </div>
 

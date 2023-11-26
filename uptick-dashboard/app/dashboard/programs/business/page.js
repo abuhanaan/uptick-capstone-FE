@@ -3,18 +3,15 @@ import { HiOutlinePlus } from "react-icons/hi";
 import Link from 'next/link';
 
 
-const TalentTech = () => {
+const TalentBusiness = () => {
     const programsData = [
-        { id: 1, slug: 'software-engineering', title: 'Software Engineering', totalApplicants: 200 },
-        { id: 2, slug: 'design', title: 'Design', totalApplicants: 200 },
-        { id: 3, slug: 'project-management', title: 'Project Management', totalApplicants: 200 },
-        { id: 4, slug: 'ai-data', title: 'AI & Data', totalApplicants: 200 }
+        { id: 1, slug: 'startup-school', title: 'Startup School', totalApplicants: 200 },
     ];
 
     return (
-        <div className="mt-6 h-screen">
+        <div className="mt-6 flex flex-col h-screen">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-[#15254C] text-2xl font-bold">Talent Tech</h1>
+                <h1 className="text-[#15254C] text-2xl font-bold">Talent Business</h1>
 
                 <Link href='#' className="btn bg-[#477BFF] text-white">
                     <HiOutlinePlus size={20} className="stroke-2" />
@@ -22,7 +19,7 @@ const TalentTech = () => {
                 </Link>
             </div>
 
-            <div className="h-full">
+            <div className="flex-grow">
                 <div className="overflow-x-auto overflow-y-hidden h-full">
                     <table className="table border-separate border-spacing-y-6">
                         <thead>
@@ -36,7 +33,7 @@ const TalentTech = () => {
                             {
                                 programsData.map(program => (
                                     <tr key={program.id} className="bg-white">
-                                        <td className="py-1"><Link href={`/dashboard/programs/tech/${program.slug}`}>{program.title}</Link></td>
+                                        <td className="py-1"><Link href={`/dashboard/programs/business/${program.slug}`}>{program.title}</Link></td>
                                         <td className="py-1">{program.totalApplicants}</td>
                                         <th className="py-1">
                                             <div className="dropdown dropdown-end">
@@ -44,7 +41,7 @@ const TalentTech = () => {
                                                     <HiOutlineEllipsisVertical />
                                                 </label>
                                                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                    <li><Link href={`/dashboard/programs/tech/${program.slug}`}>View Applicants</Link></li>
+                                                    <li><Link href={`/dashboard/programs/business/${program.slug}`}>View Applicants</Link></li>
                                                     <li><Link href='#'>Open Application</Link></li>
                                                     <li><Link href='#'>Close Application</Link></li>
                                                 </ul>
@@ -61,4 +58,4 @@ const TalentTech = () => {
     )
 }
 
-export default TalentTech;
+export default TalentBusiness;
