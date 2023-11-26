@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import clsx from 'clsx';
-import ShowModalBtn from './show-modal-btn';
-import ModalBox from './modal-box';
+import ShowModalBtn from '../../show-modal-btn';
+import ModalBox from '../../modal-box';
 
 const Program = ({ params }) => {
     const applicants = [
