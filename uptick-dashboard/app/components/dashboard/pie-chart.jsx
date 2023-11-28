@@ -41,14 +41,15 @@ const PieChart = ({ chartData }) => {
                             pointStyle: 'circle'
                         }
                     },
-                    title: {
-                        display: true,
-                        text: 'Experience',
-                        align: 'start',
-                        font: {
-                            size: 18
-                        }
-                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Experience',
+                    //     align: 'start',
+                    //     padding: '5px',
+                    //     font: {
+                    //         size: 18
+                    //     }
+                    // },
                 },
             },
         });
@@ -61,8 +62,9 @@ const PieChart = ({ chartData }) => {
     }, []);
 
     return (
-        <div className='relative w-[400px] h-[400px] self-center'>
-            <canvas ref={chartRef} />
+        <div className='relative w-[330px] h-[300px] rounded-lg bg-white pt-2 px-4 self-center'>
+            <h2 className='text-lg font-bold -mb-12'>Experience</h2>
+            <canvas ref={chartRef} className='' />
         </div>
     )
 }

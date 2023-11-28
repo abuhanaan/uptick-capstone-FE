@@ -87,10 +87,10 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col-reverse items-stretch gap-8 lg:flex-row mt-9 overflow-x-auto">
+            <div className="flex flex-col-reverse items-stretch gap-24 lg:flex-row mt-9 overflow-x-auto">
                 <PieChart chartData={chartData} />
 
-                <div className="flex-2 lg:ml-auto">
+                <div className="flex-grow lg:ml-auto">
                     <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1 mb-2">Recent Jobs</h2>
                     <div className="overflow-x-auto">
                         <table className="table table-lg lg:table-md">
