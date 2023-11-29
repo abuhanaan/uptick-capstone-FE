@@ -21,7 +21,6 @@ const PieChart = ({ chartData }) => {
                 labels,
                 datasets: [
                     {
-                        // label: 'My First Dataset',
                         data,
                         backgroundColor: [...bgColor],
                         hoverOffset: 4

@@ -91,10 +91,10 @@ const Dashboard = () => {
                 <PieChart chartData={chartData} />
 
                 <div className="flex-grow lg:ml-auto">
-                    <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1 mb-2">Recent Jobs</h2>
+                    <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1">Recent Jobs</h2>
                     <div className="overflow-x-auto">
-                        <table className="table table-lg lg:table-md">
-                            <tbody className="flex flex-col gap-2">
+                        <table className="table border-separate border-spacing-y-4 table-lg lg:table-md">
+                            <tbody className="">
                                 {
                                     recentJobs.map(job => (
                                         <tr key={job} className="bg-white">
