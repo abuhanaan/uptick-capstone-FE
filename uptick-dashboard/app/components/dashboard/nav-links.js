@@ -67,16 +67,16 @@ export default function NavLinks() {
             </Link>
 
             <Link
-                href='/dashboard/blogs'
+                href='/dashboard/blog'
                 className={clsx(
                     `flex h-[48px] grow items-center justify-center gap-2 rounded-lg p-3 bg-[#21212B] md:bg-transparent md:text-base text-[#9A99A0] hover:bg-[#21212B] md:hover:border-t-2 md:hover:border-blue-600 hover:text-white md:w-full md:flex-none md:justify-start md:p-2 md:px-3`,
                     {
-                        'bg-sky-100 text-blue-600': pathname === '/dashboard/blogs'
+                        'bg-sky-100 text-blue-600': pathname === '/dashboard/blog'
                     }
                 )}
             >
                 <BiMessageSquareEdit className="w-6" />
-                <p className={clsx(`hidden md:block`, { 'text-white': pathname === '/dashboard/blogs' })}>Blogs</p>
+                <p className={clsx(`hidden md:block`, { 'text-white': pathname === '/dashboard/blog' })}>Blogs</p>
             </Link>
 
             <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-lg bg-red-600 md:bg-transparent md:text-base text-white hover:bg-[#21212B] md:hover:rounded-lg md:hover:border-t-2 md:hover:border-red-600 hover:text-white md:w-full md:flex-none md:justify-start md:p-2 md:px-3">
