@@ -6,9 +6,9 @@ import clsx from 'clsx';
 
 const Jobs = () => {
     const recentJobs = [
-        { company: 'Kuda', role: 'UI/UX Designer', totalApplicants: 25, deadline: '25 Dec. 2023' },
-        { company: 'Spark', role: 'Software Engineer', totalApplicants: 38, deadline: '01 Dec. 2023' },
-        { company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
+        { id: 1, company: 'Kuda', role: 'UI/UX Designer', totalApplicants: 25, deadline: '25 Dec. 2023' },
+        { id: 2, company: 'Spark', role: 'Software Engineer', totalApplicants: 38, deadline: '01 Dec. 2023' },
+        { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
     ];
 
     return (
@@ -40,19 +40,22 @@ const Jobs = () => {
                                 </thead>
                                 <tbody className=''>
                                     {
-                                        recentJobs.map(job => (
-                                            <tr key={job} className="bg-white">
+                                        recentJobs.map((job, index) => (
+
+                                            <tr key={index} className="bg-white">
                                                 <td className="w-2/6">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="avatar">
-                                                            <div className="mask mask-squircle w-6 h-6">
-                                                                <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                    <Link href={`/dashboard/jobs/${job.id}`}>
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="avatar">
+                                                                <div className="mask mask-squircle w-6 h-6">
+                                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-bold">{job.company}</div>
                                                             </div>
                                                         </div>
-                                                        <div>
-                                                            <div className="font-bold">{job.company}</div>
-                                                        </div>
-                                                    </div>
+                                                    </Link>
                                                 </td>
                                                 <td className="">
                                                     {job.role}
@@ -65,7 +68,7 @@ const Jobs = () => {
                                                             <HiOutlineEllipsisVertical />
                                                         </label>
                                                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                            <li><Link href={`#`}>View Applicants</Link></li>
+                                                            <li><Link href={`/dashboard/jobs/${job.id}`}>View Applicants</Link></li>
                                                             <li><Link href='#'>Edit Job</Link></li>
                                                             <li><Link href='#'>Delete Job</Link></li>
                                                         </ul>
