@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { HiOutlinePlus } from "react-icons/hi";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { EmptySearch } from '../../components/jobs/empty-search';
+import { EmptySearch } from '../../components/empty-search';
 import clsx from 'clsx';
 
 const Jobs = () => {
@@ -25,7 +25,7 @@ const Jobs = () => {
             <div className="h-full">
                 {
                     recentJobs.length === 0 ?
-                        <EmptySearch />
+                        <EmptySearch headers={['Company', 'Role', 'No. of applicants', 'Deadline']} />
                         :
                         <div className="overflow-x-auto overflow-y-hidden h-full">
                             <table className="table table-sm border-separate border-spacing-y-6">
