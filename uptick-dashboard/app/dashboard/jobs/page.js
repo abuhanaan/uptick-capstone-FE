@@ -1,8 +1,12 @@
+'use client';
+
 import Link from 'next/link';
-import { HiOutlinePlus } from "react-icons/hi";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
 import { EmptySearch } from '../../components/empty-search';
 import clsx from 'clsx';
+import AddButton from '../../components/add-button';
+import Modal from '../../components/modal';
+import { useState } from 'react';
 
 const Jobs = () => {
     const recentJobs = [
@@ -11,15 +15,24 @@ const Jobs = () => {
         { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
     ];
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    function toggleModal() {
+        setIsModalOpen(prev => !prev);
+    }
+
     return (
         <div className="mt-6 h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Jobs</h1>
 
-                <Link href='#' className="btn bg-[#477BFF] text-white">
-                    <HiOutlinePlus size={20} className="stroke-2" />
-                    Add New
-                </Link>
+                <AddButton toggleModal={setIsModalOpen}>Add New</AddButton>
+
+                <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
+                    <h2>Modal Content</h2>
+                    <p>This is the content of your modal.</p>
+                </Modal>
+
             </div>
 
             <div className="h-full">
