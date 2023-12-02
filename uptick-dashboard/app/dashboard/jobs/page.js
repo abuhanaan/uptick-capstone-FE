@@ -3,9 +3,12 @@
 import Link from 'next/link';
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
 import { EmptySearch } from '../../components/empty-search';
+import { PreviewIcon } from '../../components/Icons';
 import clsx from 'clsx';
 import AddButton from '../../components/add-button';
 import Modal from '../../components/modal';
+import Tabs from '../../components/tabs';
+import ThumbnailForm from './thumbnail-form';
 import { useState } from 'react';
 
 const Jobs = () => {
@@ -15,22 +18,24 @@ const Jobs = () => {
         { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
     ];
 
+    const tabs = [
+        { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm /> },
+        { id: 'tab2', label: 'Job Details', content: <p>This is the content of Tab 2.</p> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <p>This is the content of Tab 3.</p> }
+    ];
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    function toggleModal() {
-        setIsModalOpen(prev => !prev);
-    }
-
     return (
-        <div className="mt-6 h-screen">
-            <div className="flex justify-between items-center mb-6">
+        <div className="mt-6 h-screen w-full">
+            <div className="flex justify-between items-center mb-6 w-full">
                 <h1 className="text-[#15254C] text-2xl font-bold">Jobs</h1>
 
                 <AddButton toggleModal={setIsModalOpen}>Add New</AddButton>
 
                 <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
-                    <h2>Modal Content</h2>
-                    <p>This is the content of your modal.</p>
+                    <h2 className='text-2xl font-medium mb-8'>Edit</h2>
+                    <Tabs tabs={tabs} />
                 </Modal>
 
             </div>
