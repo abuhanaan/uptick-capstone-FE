@@ -19,7 +19,7 @@ export default function Tabs({ tabs }) {
                         <button
                             key={tab.id} onClick={() => handleTabClick(tab.id)}
                             className={clsx(`p-2.5 text-lg text-black font-medium border-b-2 border-transparent hover:border-black`,
-                            {'bg-gray-50 border-b-2 border-black': activeTab === tab.id})}
+                                { 'bg-gray-50 border-gray-900 border-b-2': activeTab === tab.id })}
                         >
                             {tab.label}
                         </button>

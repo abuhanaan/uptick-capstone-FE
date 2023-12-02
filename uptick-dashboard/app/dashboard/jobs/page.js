@@ -9,6 +9,9 @@ import AddButton from '../../components/add-button';
 import Modal from '../../components/modal';
 import Tabs from '../../components/tabs';
 import ThumbnailForm from './thumbnail-form';
+import JdForm from './jd-form';
+import JobPreview from './preview';
+import FullJobPreview from './full-preview';
 import { useState } from 'react';
 
 const Jobs = () => {
@@ -18,10 +21,15 @@ const Jobs = () => {
         { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
     ];
 
+    const jobPreviewArr = {
+        card: <JobPreview />,
+        full: <FullJobPreview />
+    };
+
     const tabs = [
         { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm /> },
-        { id: 'tab2', label: 'Job Details', content: <p>This is the content of Tab 2.</p> },
-        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <p>This is the content of Tab 3.</p> }
+        { id: 'tab2', label: 'Job Description', content: <JdForm /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <JobPreview /> }
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
