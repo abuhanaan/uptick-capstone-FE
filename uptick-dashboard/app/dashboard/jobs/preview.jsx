@@ -98,7 +98,7 @@ export default function JobPreview() {
                 active === 'card' ? <PreviewCard /> : <FullPreview />
             }
 
-            <div className="flex justify-center mt-12 gap-4">
+            <div className="flex justify-center mt-10 gap-4">
                 <button onClick={handlePrevious} className='disabled:opacity-25' disabled={active === 'card'}>
                     <PreviousIcon />
                 </button>
@@ -109,9 +109,9 @@ export default function JobPreview() {
             </div>
 
             <button
-                className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-16 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+                className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-10 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
             >
-                Save Changes
+                Sumbit
             </button>
         </>
     )

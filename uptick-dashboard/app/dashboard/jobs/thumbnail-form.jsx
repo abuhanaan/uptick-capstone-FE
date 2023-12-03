@@ -55,7 +55,7 @@ export default function ThumbnailForm() {
             </div>
 
             <button
-                className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-16 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+                className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-10 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
             >
                 Save Changes
             </button>
