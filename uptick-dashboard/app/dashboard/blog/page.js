@@ -1,10 +1,20 @@
+'use client';
+
 import Link from 'next/link';
 import { HiOutlinePlus } from "react-icons/hi";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
 import { HiOutlineEye } from "react-icons/hi2";
 import { BsChatSquareText } from "react-icons/bs";
 import { EmptySearch } from '../../components/empty-search';
+import AddButton from '../../components/add-button';
+import Modal from '../../components/modal';
+import Tabs from '../../components/tabs';
+import PostForm from './post-form';
+import PostPreview from './preview';
+import ImageForm from './image-form';
+import { PreviewIcon } from '../../components/Icons';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 const Jobs = () => {
     const posts = [
@@ -12,15 +22,25 @@ const Jobs = () => {
         { id: 2, title: 'Google engineered a space ship for developers', body: 'Google engineered a space ship for developers. Google engineered a space ship for developers. Google engineered a space ship for developers', author: "Michael Arthur", publishDate: '01 Dec. 2023', image: '/images/post-img.png' },
     ];
 
+    const tabs = [
+        { id: 'tab1', label: 'Add Image', content: <ImageForm /> },
+        { id: 'tab2', label: 'Post', content: <PostForm /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <PostPreview /> }
+    ];
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <div className="mt-6 h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Blog Posts</h1>
 
-                <Link href='#' className="btn bg-[#477BFF] text-white">
-                    <HiOutlinePlus size={20} className="stroke-2" />
-                    Add New
-                </Link>
+                <AddButton toggleModal={setIsModalOpen}>Add New</AddButton>
+
+                <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
+                    <h2 className='text-2xl font-medium mb-8'>Edit</h2>
+                    <Tabs tabs={tabs} />
+                </Modal>
             </div>
 
             <div className="h-full overflow-auto">

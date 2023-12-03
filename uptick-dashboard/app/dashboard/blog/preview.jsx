@@ -1,19 +1,10 @@
-import Link from 'next/link';
+'use client';
 
-const BlogPost = () => {
+import Markdown from 'markdown-to-jsx';
 
+export default function PostPreview() {
     return (
-        <div className="mt-6">
-            <div className="flex flex-col items-start gap-y-2 lg:flex-row lg:justify-between lg:items-center lg:mb-6">
-                <div className="text-2xl breadcrumbs font-bold">
-                    <ul>
-                        <li className='text-[#C8D7FF]'><Link href='/dashboard/blog'>Blog</Link></li>
-                        <li className='capitalize'>Preview</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className='flex flex-col mt-12 bg-gray-50 rounded-md px-36 py-10 gap-5'>
+            <div className='flex flex-col mt-12 bg-gray-100 rounded-md px-20 py-6 gap-5'>
                 <h4 className=''>Written by <span className='font-bold ml-3'>Joseph Ojo</span></h4>
 
                 <h1 className='text-2xl font-bold'>Udacity smashed all courses with a 50% discount</h1>
@@ -38,9 +29,12 @@ const BlogPost = () => {
                     </p>
                     {/* </Markdown> */}
                 </div>
+
+                <button
+                    className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-10 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+                >
+                    Publish
+                </button>
             </div>
-        </div>
     )
 }
-
-export default BlogPost;
