@@ -3,35 +3,35 @@
 import { useState, useRef } from "react";
 import { CloseIcon } from '../../components/Icons';
 
-export default function ThumbnailForm() {
-    const [selectedThumbnail, setSelectedThumbnail] = useState(null);
-    const thumbnailInputRef = useRef(null);
+export default function ImageForm() {
+    const [selectedImage, setSelectedImage] = useState(null);
+    const imageInputRef = useRef(null);
 
-    function handleThumbnailSelect(e) {
-        const thumbnail = e.target.files[0];
+    function handleImageSelect(e) {
+        const image = e.target.files[0];
 
-        if (thumbnail) {
+        if (image) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setSelectedThumbnail(reader.result);
+                setSelectedImage(reader.result);
             }
-            reader.readAsDataURL(thumbnail);
+            reader.readAsDataURL(image);
         }
     }
 
-    function handleThumbnailRemove() {
-        setSelectedThumbnail(null);
+    function handleImageRemove() {
+        setSelectedImage(null);
     }
 
     return (
         <div className="pt-12">
             <div className="py-6 rounded-md flex flex-col border-dashed border border-gray-800 justify-center items-center w-[592px] min-h-[279px] mx-auto">
                 {
-                    selectedThumbnail ?
+                    selectedImage ?
                         <div className="flex items-center mx-auto w-[492px] py-7 bg-gray-50 rounded-lg relative">
-                            <img src={selectedThumbnail} alt="Selected" className="mx-auto object-scale-down w-[227px] h-[227px] rounded-lg" />
+                            <img src={selectedImage} alt="Selected" className="mx-auto object-scale-down w-[227px] h-[227px] rounded-lg" />
 
-                            <button onClick={handleThumbnailRemove} className='absolute right-4 top-4'>
+                            <button onClick={handleImageRemove} className='absolute right-4 top-4'>
                                 <CloseIcon stroke='#FFFFFF' fill='#FF0000' />
                             </button>
                         </div>
@@ -41,14 +41,15 @@ export default function ThumbnailForm() {
 
                 <form className="pt-6 flex justify-center items-center bg-red w-full">
                     <label className="cursor-pointer bg-blue-500 text-white font-semibold py-4 px-6 text-center  rounded-lg mx-auto">
-                        {selectedThumbnail ? 'Change Image' : 'Browse image'}
+                        {selectedImage ? 'Change Image' : 'Browse image'}
                         <input
-                            ref={thumbnailInputRef}
+                            ref={imageInputRef}
                             id="fileUpload"
                             type="file"
                             className="hidden"
                             accept="image/*"
-                            onChange={handleThumbnailSelect}
+                            onChange={handleImageSelect}
+                            multiple
                         />
                     </label>
                 </form>

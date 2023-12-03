@@ -40,10 +40,10 @@ const Dashboard = () => {
 
             <div className="flex flex-col sm:flex-wrap md:flex-row mt-5 gap-4 overflow-x-auto">
                 {
-                    cardData.map(data => {
+                    cardData.map((data, index) => {
                         const CardIcon = data.icon;
                         return (
-                            <OverviewCard key={data} type={data.type} total={data.total} accepted={data.accepted} rejected={data.rejected} pending={data.pending}>
+                            <OverviewCard key={index} type={data.type} total={data.total} accepted={data.accepted} rejected={data.rejected} pending={data.pending}>
                                 <div className="padding flex justify-center items-center w-7 h-7 p-1 rounded-full bg-blue-200 text-blue-800">
                                     <CardIcon size={20} />
                                 </div>
@@ -70,8 +70,8 @@ const Dashboard = () => {
                         </thead>
                         <tbody>
                             {
-                                recentApplicationData.map(app => (
-                                    <tr key={app} className="bg-white">
+                                recentApplicationData.map((app, index) => (
+                                    <tr key={index} className="bg-white">
                                         <td>{app.name}</td>
                                         <td>{app.application}</td>
                                         <td>{app.appliedDate}</td>
@@ -96,8 +96,8 @@ const Dashboard = () => {
                         <table className="table border-separate border-spacing-y-4 table-lg lg:table-md">
                             <tbody className="">
                                 {
-                                    recentJobs.map(job => (
-                                        <tr key={job} className="bg-white">
+                                    recentJobs.map((job, index) => (
+                                        <tr key={index} className="bg-white">
                                             <td className="w-2/6">
                                                 <div className="flex items-center gap-3">
                                                     <div className="avatar">
