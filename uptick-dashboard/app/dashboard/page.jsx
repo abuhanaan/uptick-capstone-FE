@@ -4,6 +4,7 @@ import { PiToolbox } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import PieChart from '../components/dashboard/pie-chart';
 import Link from 'next/link';
+import Welcome from '../components/dashboard/welcome';
 
 const Dashboard = () => {
     const cardData = [
@@ -33,10 +34,7 @@ const Dashboard = () => {
 
     return (
         <section className="overflow-x-auto">
-            <div>
-                <h1 className="text-2xl font-bold leading-8">Welcome, Admin</h1>
-                <span className="text-sm">Monday, 6th Nov. 2023</span>
-            </div>
+            <Welcome />
 
             <div className="flex flex-col sm:flex-wrap md:flex-row mt-5 gap-4 overflow-x-auto">
                 {

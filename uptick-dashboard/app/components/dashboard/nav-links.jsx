@@ -6,6 +6,7 @@ import { PiToolbox } from "react-icons/pi";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
+import { signOut } from 'next-auth/react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -79,7 +80,7 @@ export default function NavLinks() {
                 <p className={clsx(`hidden md:block`, { 'text-white': pathname === '/dashboard/blog' })}>Blogs</p>
             </Link>
 
-            <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-lg bg-red-600 md:bg-transparent md:text-base text-white hover:bg-[#21212B] md:hover:rounded-lg md:hover:border-t-2 md:hover:border-red-600 hover:text-white md:w-full md:flex-none md:justify-start md:p-2 md:px-3">
+            <button onClick={() => signOut()} className="flex h-[48px] grow items-center justify-center gap-2 rounded-lg bg-red-600 md:bg-transparent md:text-base text-[#9A99A0] hover:bg-[#21212B] md:hover:rounded-lg md:hover:border-t-2 md:hover:border-red-600 hover:text-white md:w-full md:flex-none md:justify-start md:p-2 md:px-3">
                 <FiLogOut className="w-6" />
                 <p className="hidden md:block">Logout</p>
             </button>
