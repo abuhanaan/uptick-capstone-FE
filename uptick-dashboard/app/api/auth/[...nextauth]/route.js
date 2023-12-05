@@ -1,7 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { getSession } from 'next-auth/react';
 
-const authOptions = {
+export const authOptions = {
     providers: [
         CredentialsProvider({
             name: 'credentials',
@@ -54,25 +55,53 @@ const authOptions = {
         signOut: '/',
     },
     callbacks: {
-        async jwt(token, user) {
+        async jwt({ token, user }) {
             if (user) {
-                console.log(user);
-                token.id = user.id;
-                token.username = user.username;
-                token.accessToken = user.accessToken;
+                // Decode and log the token payload
+                const decodedToken = JSON.parse(Buffer.from(user.accessToken.split('.')[1], 'base64').toString('utf-8'));
+
+                return {
+                    userId: decodedToken.userId,
+                    role: decodedToken.role,
+                    username: user.username,
+                    issuedAt: decodedToken.iat,
+                    expires: decodedToken.exp,
+                    accessToken: user.accessToken,
+                }
             }
             return token;
         },
-        async session(session, token) {
+        async session({ session, token }) {
+            console.log('Input token \n', token);
+            console.log('Input session \n', session);
+
+            const expires = new Date(token.expires * 1000);
+            
             if (token) {
-                console.log(token);
-                session.user.id = token.id;
+                session.user.userId = token.userId;
                 session.user.username = token.username;
+                session.user.role = token.role;
+                session.iat = token.issuedAt;
+                session.exp = new Date(token.expires).valueOf();
+                session.expires = expires;
                 session.accessToken = token.accessToken;
             }
+            console.log('Output session \n', session);
             return session;
         }
     }
+};
+
+export const customFetch = async (url, options) => {
+    const session = await getSession();
+
+    return fetch(url, {
+        ...options,
+        headers: {
+            ...options?.headers,
+            ...(session && { Authorization: `Bearer ${session.accessToken}` }),
+        },
+    });
 };
 
 const handler = NextAuth(authOptions);

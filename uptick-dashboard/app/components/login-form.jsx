@@ -27,15 +27,14 @@ export default function LoginForm() {
 
         try {
             const res = await signIn('credentials', {
+                redirect: false,
                 ...loginData,
-                redirect: false
             });
 
             if (res.error) {
                 setErrorMessage('Invalid login details.');
                 return;
             }
-            // console.log(res)
 
             router.replace('dashboard');
 
