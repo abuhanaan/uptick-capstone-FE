@@ -1,7 +1,6 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
+import LoginForm from './components/login-form';
 
 export default function Home() {
     return (
@@ -17,32 +16,7 @@ export default function Home() {
                     <h1 className='text-3xl sm:text-5xl font-extrabold py-4'>Welcome Back!</h1>
                     <p className='font-medium'>Login to continue</p>
 
-                    <div className="form-control w-full mt-12">
-                        <div className="w-full mb-5">
-                            <label className="label" htmlFor='username'>
-                                <span className="label-text text-white">Username</span>
-                            </label>
-                            <input type="text" id='username' name='username' placeholder="Username" className="input input-bordered border-[#999999] bg-[#4D4D4D] text-[#F5F5F5] font-medium text-sm h-10 w-full" />
-                        </div>
-
-                        <div className="mb-0">
-                            <label className="label" htmlFor='password'>
-                                <span className="label-text text-white">Password</span>
-                            </label>
-                            <input type="password" id='password' name='password' placeholder="Password" className="input input-bordered font-medium border-[#999999] bg-[#4D4D4D] text-[#F5F5F5] text-sm h-10 w-full" />
-                        </div>
-
-                        <div className="mb-10 mt-[7px]">
-                            <label className="label flex justify-start cursor-pointer">
-                                <input type="checkbox" onChange={() => console.log('')} checked="checked" className="checkbox checkbox-primary checkbox-xs mr-4" />
-                                <span className="label-text text-white">Remember me</span>
-                            </label>
-                        </div>
-
-                        <Link href='/dashboard'>
-                            <button className="bg-blue-500 w-full rounded-lg h-10">Log in</button>
-                        </Link>
-                    </div>
+                    <LoginForm />
 
                     <div className="mt-6 text-center font-medium">Don't have an account? <a className="link link-hover text-[#477BFF]">Sign up</a></div>
                 </div>
