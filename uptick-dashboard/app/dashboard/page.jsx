@@ -5,20 +5,34 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import PieChart from '../components/dashboard/pie-chart';
 import Link from 'next/link';
 import Welcome from '../components/dashboard/welcome';
+import { getSession, useSession } from 'next-auth/react';
+import { authOptions } from 'app/api/auth/[...nextauth]/route';
+import ViewDetailsBtn from "app/components/view-details-btn";
+import Modal from 'app/components/modal';
+import { getServerSession } from "next-auth";
+import { redirect } from 'next/navigation';
 
-const Dashboard = () => {
-    const cardData = [
-        { type: 'Programs', total: 200, accepted: 150, rejected: 150, pending: 150, icon: RiEditBoxLine },
-        { type: 'Jobs', total: 200, accepted: 150, rejected: 150, pending: 150, icon: PiToolbox },
-        { type: 'Startups', total: 200, accepted: 150, rejected: 150, pending: 150, icon: HiOutlineUserGroup }
-    ];
+async function getData() {
+    const session = await getServerSession(authOptions);
+    const token = session.accessToken;
 
-    const recentApplicationData = [
-        { name: 'Chris', application: 'Program', appliedDate: '6/11/2023', status: 'Pending' },
-        { name: 'John', application: 'Job', appliedDate: '6/11/2023', status: 'Accepted' },
-        { name: 'Martha', application: 'Program', appliedDate: '6/11/2023', status: 'Pending' },
-        { name: 'Angelina', application: 'Job', appliedDate: '6/11/2023', status: 'Rejected' }
-    ];
+    const response = await fetch('https://upthick-talent-teama.onrender.com/admin/home', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, 
+        },
+        cache: 'no-store',
+    });
+
+    if (response.status === 401 || response.statusText === 'Unauthorized') {
+        redirect('/');
+    }
+
+    return response.json();
+}
+
+const Dashboard = async () => {
 
     const recentJobs = [
         { company: 'Kuda', role: 'UI/UX Designer', salary: '100' },
@@ -27,10 +41,20 @@ const Dashboard = () => {
     ];
 
     const chartData = {
-        labels: ['120 < 1 year', '150 < 3 years', '100 3+ years'],
-        data: [120, 150, 100],
+        labels: ['3 < 1 year', '2 < 3 years', '1 3+ years'],
+        data: [3, 2, 1],
         bgColor: ['#0E1933', '#2B4A99', '#A3BDFF']
     };
+
+    const { stats, recentApplicants, recentJobApplicants } = await getData();
+    // const data = await getData();
+    // console.log(data);
+
+    const cardData = [
+        { type: 'Programs', total: stats.programApplicants, accepted: stats.acceptedprogramApplications, rejected: stats.rejectedprogramApplications, pending: stats.pendingprogramApplications, icon: RiEditBoxLine },
+        { type: 'Jobs', total: stats.jobApplicants, accepted: stats.acceptedJobApplications, rejected: stats.rejectedJobApplications, pending: stats.pendingJobApplications, icon: PiToolbox },
+        { type: 'Startups', total: stats.startups, accepted: stats.acceptedStartupApplications, rejected: stats.rejectedStartupApplications, pending: stats.pendingStartupApplications, icon: HiOutlineUserGroup }
+    ];
 
     return (
         <section className="overflow-x-auto">
@@ -63,19 +87,27 @@ const Dashboard = () => {
                                 <th>Application</th>
                                 <th>Applied Date</th>
                                 <th>Status</th>
-                                <th>View</th>
+                                {/* <th>View</th> */}
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                recentApplicationData.map((app, index) => (
-                                    <tr key={index} className="bg-white">
-                                        <td>{app.name}</td>
-                                        <td>{app.application}</td>
-                                        <td>{app.appliedDate}</td>
-                                        <td>{app.status}</td>
+                                recentApplicants.map((applicant) => (
+                                    <tr key={applicant.id} className="bg-white">
+                                        <td>{`${applicant.firstname} ${applicant.lastName}`}</td>
+                                        <td>{applicant.programPreferenceID ? 'Program' : 'Job'}</td>
+                                        <td>
+                                            {
+                                                new Date(applicant.applicationDate).toLocaleDateString('en-GB', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    year: 'numeric'
+                                                })
+                                            }
+                                        </td>
+                                        <td className="capitalize">{applicant.status}</td>
                                         <th>
-                                            <Link href='#' className="btn btn-ghost btn-xs">Details</Link>
+                                            {/* <ViewDetailsBtn toggleModal={setIsModalOpen} className="btn btn-ghost btn-xs">Details</ViewDetailsBtn> */}
                                         </th>
                                     </tr>
                                 ))
@@ -113,7 +145,7 @@ const Dashboard = () => {
                                             </td>
                                             <td className="w-1/6">{job.salary}</td>
                                             <th className="w-1/6">
-                                                <Link href='#' className="btn btn-ghost btn-xs">Details</Link>
+                                                {/* <ViewDetailsBtn toggleModal={setIsModalOpen} className="btn btn-ghost btn-xs">Details</ViewDetailsBtn> */}
                                             </th>
                                         </tr>
                                     ))
@@ -126,5 +158,4 @@ const Dashboard = () => {
         </section>
     )
 }
-
 export default Dashboard;
