@@ -34,13 +34,6 @@ async function getData() {
 }
 
 const Dashboard = async () => {
-
-    // const recentJobs = [
-    //     { company: 'Kuda', role: 'UI/UX Designer', salary: '100' },
-    //     { company: 'Spark', role: 'Software Engineer', salary: '200' },
-    //     { company: 'Google', role: 'Data Analyst', salary: '300' },
-    // ];
-
     const chartData = {
         labels: ['3 < 1 year', '2 < 3 years', '1 3+ years'],
         data: [3, 2, 1],
@@ -137,18 +130,26 @@ const Dashboard = async () => {
                                                         <div className="flex items-center gap-3">
                                                             <div className="avatar">
                                                                 <div className="mask mask-squircle w-6 h-6">
-                                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                                    <img src={job.companyLogo} alt="Kuda logo" />
                                                                 </div>
                                                             </div>
                                                             <div>
-                                                                <div className="font-bold">{job.company}</div>
+                                                                <div className="font-bold">{job.title}</div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td className="w-2/6">
-                                                        {job.role}
+                                                        {job.title}
                                                     </td>
-                                                    <td className="w-1/6">{job.salary}</td>
+                                                    <td className="w-1/6">
+                                                        {
+                                                            new Date(job.applicationDeadline).toLocaleDateString('en-GB', {
+                                                                day: '2-digit',
+                                                                month: '2-digit',
+                                                                year: 'numeric'
+                                                            })
+                                                        }
+                                                    </td>
                                                     <th className="w-1/6">
                                                         {/* <ViewDetailsBtn toggleModal={setIsModalOpen} className="btn btn-ghost btn-xs">Details</ViewDetailsBtn> */}
                                                     </th>

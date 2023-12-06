@@ -13,15 +13,14 @@ import JdForm from './jd-form';
 import JobPreview from './preview';
 import FullJobPreview from './full-preview';
 import { useState, useEffect } from 'react';
-// import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
-import { redirect } from 'next/navigation';
-// import { authOptions } from 'app/api/auth/[...nextauth]/route';
+import { useRouter } from 'next/navigation';
 import { fetchJobsData } from 'app/utils/api';
 
 const Jobs = () => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchDataFromApi = () => {
@@ -36,10 +35,11 @@ const Jobs = () => {
                             .catch(error => {
                                 // Handle error
                                 console.log(error);
+                                router.replace('/');
                             });
                     } else {
                         // Redirect to login page if the user is not authenticated
-                        redirect('/');
+                        router.replace('/');
                     }
                 })
                 .catch(error => {
@@ -49,12 +49,6 @@ const Jobs = () => {
 
         fetchDataFromApi();
     }, []);
-
-    const recentJobs = [
-        { id: 1, company: 'Kuda', role: 'UI/UX Designer', totalApplicants: 25, deadline: '25 Dec. 2023' },
-        { id: 2, company: 'Spark', role: 'Software Engineer', totalApplicants: 38, deadline: '01 Dec. 2023' },
-        { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
-    ];
 
     const tabs = [
         { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm /> },
