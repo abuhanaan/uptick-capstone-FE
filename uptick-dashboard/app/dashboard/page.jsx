@@ -15,12 +15,13 @@ import { redirect } from 'next/navigation';
 async function getData() {
     const session = await getServerSession(authOptions);
     const token = session.accessToken;
+    const baseUrl = process.env.BASE_URL;
 
-    const response = await fetch('https://upthick-talent-teama.onrender.com/admin/home', {
+    const response = await fetch(`${baseUrl}/admin/home`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, 
+            'Authorization': `Bearer ${token}`,
         },
         cache: 'no-store',
     });
@@ -34,11 +35,11 @@ async function getData() {
 
 const Dashboard = async () => {
 
-    const recentJobs = [
-        { company: 'Kuda', role: 'UI/UX Designer', salary: '100' },
-        { company: 'Spark', role: 'Software Engineer', salary: '200' },
-        { company: 'Google', role: 'Data Analyst', salary: '300' },
-    ];
+    // const recentJobs = [
+    //     { company: 'Kuda', role: 'UI/UX Designer', salary: '100' },
+    //     { company: 'Spark', role: 'Software Engineer', salary: '200' },
+    //     { company: 'Google', role: 'Data Analyst', salary: '300' },
+    // ];
 
     const chartData = {
         labels: ['3 < 1 year', '2 < 3 years', '1 3+ years'],
@@ -46,7 +47,7 @@ const Dashboard = async () => {
         bgColor: ['#0E1933', '#2B4A99', '#A3BDFF']
     };
 
-    const { stats, recentApplicants, recentJobApplicants } = await getData();
+    const { stats, recentApplicants, recentJobs } = await getData();
     // const data = await getData();
     // console.log(data);
 
@@ -122,37 +123,42 @@ const Dashboard = async () => {
 
                 <div className="flex-grow lg:ml-auto">
                     <h2 className="bg-white font-bold text-lg text-[#15254C] px-4 py-1">Recent Jobs</h2>
-                    <div className="overflow-x-auto">
-                        <table className="table border-separate border-spacing-y-4 table-lg lg:table-md">
-                            <tbody className="">
-                                {
-                                    recentJobs.map((job, index) => (
-                                        <tr key={index} className="bg-white">
-                                            <td className="w-2/6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="avatar">
-                                                        <div className="mask mask-squircle w-6 h-6">
-                                                            <img src="/images/job-logo.png" alt="Kuda logo" />
+
+                    {
+                        recentJobs.length === 0 ?
+                            <div className="text-lg font-semibold p-4">No record</div> :
+                            <div className="overflow-x-auto">
+                                <table className="table border-separate border-spacing-y-4 table-lg lg:table-md">
+                                    <tbody className="">
+                                        {
+                                            recentJobs.map((job, index) => (
+                                                <tr key={index} className="bg-white">
+                                                    <td className="w-2/6">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="avatar">
+                                                                <div className="mask mask-squircle w-6 h-6">
+                                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-bold">{job.company}</div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="font-bold">{job.company}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="w-2/6">
-                                                {job.role}
-                                            </td>
-                                            <td className="w-1/6">{job.salary}</td>
-                                            <th className="w-1/6">
-                                                {/* <ViewDetailsBtn toggleModal={setIsModalOpen} className="btn btn-ghost btn-xs">Details</ViewDetailsBtn> */}
-                                            </th>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                                    </td>
+                                                    <td className="w-2/6">
+                                                        {job.role}
+                                                    </td>
+                                                    <td className="w-1/6">{job.salary}</td>
+                                                    <th className="w-1/6">
+                                                        {/* <ViewDetailsBtn toggleModal={setIsModalOpen} className="btn btn-ghost btn-xs">Details</ViewDetailsBtn> */}
+                                                    </th>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                    }
                 </div>
             </div>
         </section>

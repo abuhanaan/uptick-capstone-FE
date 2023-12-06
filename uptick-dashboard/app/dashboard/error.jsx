@@ -4,6 +4,6 @@ import React from 'react'
 
 export default function Error() {
   return (
-    <div>An error occurred</div>
+    <div>Sorry, something went wrong :(</div>
   )
 }

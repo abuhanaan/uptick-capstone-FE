@@ -42,41 +42,7 @@ export default function LoginForm() {
             console.error('An error occurred:', error);
         }
     }
-
-    async function handleLogin(e) {
-        e.preventDefault();
-
-        const { username, password } = loginData;
-
-        try {
-            const response = await fetch('https://upthick-talent-teama.onrender.com/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-
-                console.log(data.accessToken);
-
-                // Set the token in an HttpOnly cookie with a 1-hour expiration
-                document.cookie = `token=${data.accessToken}; Path=/; HttpOnly; Max-Age=${60 * 60}`;
-
-                // Redirect to a protected page
-                router.replace('/dashboard');
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || 'Authentication failed');
-            }
-        } catch (error) {
-            console.error('An error occurred during login:', error);
-            setError('An error occurred. Please try again.');
-        }
-    }
-
+    
     return (
         <form onSubmit={(e) => handleSubmit(e)} className={`form-control w-full ${errorMessage ? 'mt-6' : 'mt-12'}`}>
             {errorMessage && (

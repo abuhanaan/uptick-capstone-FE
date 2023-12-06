@@ -10,9 +10,10 @@ export const authOptions = {
 
             async authorize(credentials) {
                 const { username, password } = credentials;
+                const baseUrl = process.env.BASE_URL;
 
                 try {
-                    const response = await fetch('https://upthick-talent-teama.onrender.com/auth/login', {
+                    const response = await fetch(`${baseUrl}/auth/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

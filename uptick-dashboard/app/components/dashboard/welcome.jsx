@@ -7,7 +7,6 @@ export default function Welcome() {
 
     return (
         <div>
-            {/* <h1 className="text-2xl font-bold leading-8">Welcome, {session?.user?.username}</h1> */}
             <h1 className="text-2xl font-bold leading-8">Welcome, Admin</h1>
             <span className="text-sm">Monday, 6th Nov. 2023</span>
         </div>
