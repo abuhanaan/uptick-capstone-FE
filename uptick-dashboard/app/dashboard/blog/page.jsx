@@ -14,9 +14,44 @@ import PostPreview from './preview';
 import ImageForm from './image-form';
 import { PreviewIcon } from '../../components/Icons';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
+import { fetchBlogPosts } from 'app/utils/api';
 
 const Jobs = () => {
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchDataFromApi = () => {
+            getSession()
+                .then(session => {
+                    if (session) {
+                        fetchBlogPosts(session.accessToken)
+                            .then(responseData => {
+                                setData(responseData);
+                                setIsLoading(false);
+                            })
+                            .catch(error => {
+                                // Handle error
+                                console.log(error);
+                                router.replace('/');
+                            });
+                    } else {
+                        // Redirect to login page if the user is not authenticated
+                        router.replace('/');
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred during session retrieval:', error);
+                });
+        };
+
+        fetchDataFromApi();
+    }, []);
+
     const posts = [
         { id: 1, title: 'Udacity smashed all courses with a 50% discount', body: 'Udacity smashed all courses with a 50% discount. Udacity smashed all courses with a 50% discount', author: 'James Morgan', publishDate: '25 Dec. 2023', image: '/images/post-img.png' },
         { id: 2, title: 'Google engineered a space ship for developers', body: 'Google engineered a space ship for developers. Google engineered a space ship for developers. Google engineered a space ship for developers', author: "Michael Arthur", publishDate: '01 Dec. 2023', image: '/images/post-img.png' },
@@ -29,6 +64,12 @@ const Jobs = () => {
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    if (isLoading) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full flex justify-center items-center">Loading...</div>
+        )
+    }
 
     return (
         <div className="mt-6 h-screen">
@@ -45,7 +86,7 @@ const Jobs = () => {
 
             <div className="h-full overflow-auto">
                 {
-                    posts.length === 0 ?
+                    data?.length === 0 ?
                         <EmptySearch headers={['Posts', 'Published']} />
                         :
                         <div className="overflow-x-auto overflow-y-hidden w-full h-full">
@@ -59,15 +100,15 @@ const Jobs = () => {
                                 </thead>
                                 <tbody className=''>
                                     {
-                                        posts.map((post, index) => (
+                                        data?.map((post) => (
 
-                                            <tr key={index} className="bg-white">
+                                            <tr key={post.id} className="bg-white">
                                                 <td className="w-2/3 px-7 py-8">
                                                     <Link href={`/dashboard/blog/${post.id}`}>
                                                         <div className="flex items-center gap-6">
                                                             <div className="avatar">
                                                                 <div className="w-[248px] h-[160px]">
-                                                                    <img src="/images/post-img.png" alt="Kuda logo" />
+                                                                    <img src={post.image} alt="Kuda logo" />
                                                                 </div>
                                                             </div>
                                                             <div className='flex flex-col gap-3'>
@@ -75,12 +116,20 @@ const Jobs = () => {
 
                                                                 <h3 className='line-clamp-2 text-2xl leading-9 font-bold'>{post.title}</h3>
 
-                                                                <p className='line-clamp-2'>{post.body}</p>
+                                                                <p className='line-clamp-2'>{post.content}</p>
                                                             </div>
                                                         </div>
                                                     </Link>
                                                 </td>
-                                                <td className="px-7 py-8">{post.publishDate}</td>
+                                                <td className="px-7 py-8">
+                                                    {
+                                                        new Date(post.publicationDate).toLocaleDateString('en-GB', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric'
+                                                        })
+                                                    }
+                                                </td>
                                                 <td className='px-7 py-8 flex flex-col items-end gap-6'>
                                                     <div className="dropdown dropdown-end">
                                                         <label tabIndex={0} className="btn bg-transparent border-none shadow-none m-1 mt-14 font-bold text-xl hover:bg-transparent">

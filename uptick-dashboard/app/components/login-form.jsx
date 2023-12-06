@@ -42,9 +42,9 @@ export default function LoginForm() {
             console.error('An error occurred:', error);
         }
     }
-
+    
     return (
-        <form onSubmit={handleSubmit} className={`form-control w-full ${errorMessage ? 'mt-6' : 'mt-12'}`}>
+        <form onSubmit={(e) => handleSubmit(e)} className={`form-control w-full ${errorMessage ? 'mt-6' : 'mt-12'}`}>
             {errorMessage && (
                 <div className="flex h-8 items-end space-x-1 mb-6" aria-live="polite" aria-atomic="true" >
                     <ExclamationCircleIcon className="h-5 w-5 text-red-500" />

@@ -10,9 +10,10 @@ export const authOptions = {
 
             async authorize(credentials) {
                 const { username, password } = credentials;
+                const baseUrl = process.env.BASE_URL;
 
                 try {
-                    const response = await fetch('https://upthick-talent-teama.onrender.com/auth/login', {
+                    const response = await fetch(`${baseUrl}/auth/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -23,26 +24,16 @@ export const authOptions = {
                         }),
                     });
 
-                    const data = await response.json();
+                    const user = await response.json();
 
-                    if (response.ok) {
-                        const accessToken = data.accessToken;
-
-                        return {
-                            id: 1,
-                            username: 'Admin',
-                            accessToken
-                        };
+                    if (response.ok && user) {
+                        return user;
                     } else {
-                        const errorData = await response.json();
-                        const errorMessage = errorData.message || 'Authentication failed';
-
-                        return { message: errorMessage };
+                        return null;
                     }
                 } catch (error) {
-
+                    return null;
                 }
-                return user;
             }
         })
     ],
@@ -57,37 +48,43 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                // Decode and log the token payload
-                const decodedToken = JSON.parse(Buffer.from(user.accessToken.split('.')[1], 'base64').toString('utf-8'));
+                // console.log('received user from jwt:', user);
+                token.accessToken = user.accessToken;
+                
+                // Decode token and get the payload
+                // const decodedToken = JSON.parse(Buffer.from(user.accessToken.split('.')[1], 'base64').toString('utf-8'));
 
-                return {
-                    userId: decodedToken.userId,
-                    role: decodedToken.role,
-                    username: user.username,
-                    issuedAt: decodedToken.iat,
-                    expires: decodedToken.exp,
-                    accessToken: user.accessToken,
-                }
+                // return {
+                //     userId: decodedToken.userId,
+                //     role: decodedToken.role,
+                //     username: user.username,
+                //     issuedAt: decodedToken.iat,
+                //     expires: decodedToken.exp,
+                //     accessToken: user.accessToken,
+                // }
             }
             return token;
         },
-        async session({ session, token }) {
-            console.log('Input token \n', token);
-            console.log('Input session \n', session);
+        async session({ session, token, user }) {
 
-            const expires = new Date(token.expires * 1000);
-            
-            if (token) {
-                session.user.userId = token.userId;
-                session.user.username = token.username;
-                session.user.role = token.role;
-                session.iat = token.issuedAt;
-                session.exp = new Date(token.expires).valueOf();
-                session.expires = expires;
-                session.accessToken = token.accessToken;
-            }
-            console.log('Output session \n', session);
+            // console.log('user received in session', token);
+            session.accessToken = token.accessToken;
+            // console.log('session to be returned:', session);
+
             return session;
+
+            // const expires = new Date(token.expires * 1000);
+            
+            // if (token) {
+            //     session.user.userId = token.userId;
+            //     session.user.username = token.username;
+            //     session.user.role = token.role;
+            //     session.iat = token.issuedAt;
+            //     session.exp = new Date(token.expires).valueOf();
+            //     session.expires = expires;
+            //     session.accessToken = token.accessToken;
+            // }
+            // return session;
         }
     }
 };

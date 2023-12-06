@@ -71,7 +71,7 @@ const Program = ({ params }) => {
                                         </td>
                                         <td className="">{applicant.date}</td>
                                         <th className="text-end">
-                                            <ViewDetailsBtn toggleModal={setIsModalOpen} />
+                                            <ViewDetailsBtn toggleModal={setIsModalOpen}>View details</ViewDetailsBtn>
                                         </th>
                                     </tr>
                                 ))

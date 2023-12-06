@@ -12,19 +12,43 @@ import ThumbnailForm from './thumbnail-form';
 import JdForm from './jd-form';
 import JobPreview from './preview';
 import FullJobPreview from './full-preview';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
+import { fetchJobsData } from 'app/utils/api';
 
 const Jobs = () => {
-    const recentJobs = [
-        { id: 1, company: 'Kuda', role: 'UI/UX Designer', totalApplicants: 25, deadline: '25 Dec. 2023' },
-        { id: 2, company: 'Spark', role: 'Software Engineer', totalApplicants: 38, deadline: '01 Dec. 2023' },
-        { id: 3, company: 'Google', role: 'Data Analyst', totalApplicants: 15, deadline: '31 Jan. 2024' },
-    ];
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
-    const jobPreviewArr = {
-        card: <JobPreview />,
-        full: <FullJobPreview />
-    };
+    useEffect(() => {
+        const fetchDataFromApi = () => {
+            getSession()
+                .then(session => {
+                    if (session) {
+                        fetchJobsData(session.accessToken)
+                            .then(responseData => {
+                                setData(responseData);
+                                setIsLoading(false);
+                            })
+                            .catch(error => {
+                                // Handle error
+                                console.log(error);
+                                router.replace('/');
+                            });
+                    } else {
+                        // Redirect to login page if the user is not authenticated
+                        router.replace('/');
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred during session retrieval:', error);
+                });
+        };
+
+        fetchDataFromApi();
+    }, []);
 
     const tabs = [
         { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm /> },
@@ -33,6 +57,12 @@ const Jobs = () => {
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    if (isLoading) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full flex justify-center items-center">Loading...</div>
+        )
+    }
 
     return (
         <div className="mt-6 h-screen w-full">
@@ -50,7 +80,7 @@ const Jobs = () => {
 
             <div className="h-full">
                 {
-                    recentJobs.length === 0 ?
+                    data?.length === 0 ?
                         <EmptySearch headers={['Company', 'Role', 'No. of applicants', 'Deadline']} />
                         :
                         <div className="overflow-x-auto overflow-y-hidden h-full">
@@ -66,28 +96,36 @@ const Jobs = () => {
                                 </thead>
                                 <tbody className=''>
                                     {
-                                        recentJobs.map((job, index) => (
+                                        data?.map((job) => (
 
-                                            <tr key={index} className="bg-white">
+                                            <tr key={job.id} className="bg-white">
                                                 <td className="w-2/6">
                                                     <Link href={`/dashboard/jobs/${job.id}`}>
                                                         <div className="flex items-center gap-3">
                                                             <div className="avatar">
                                                                 <div className="mask mask-squircle w-6 h-6">
-                                                                    <img src="/images/job-logo.png" alt="Kuda logo" />
+                                                                    <img src={job.companyLogo} alt="Company logo" />
                                                                 </div>
                                                             </div>
                                                             <div>
-                                                                <div className="font-bold">{job.company}</div>
+                                                                <div className="font-bold">{job.title}</div>
                                                             </div>
                                                         </div>
                                                     </Link>
                                                 </td>
                                                 <td className="">
-                                                    {job.role}
+                                                    {job.title}
                                                 </td>
                                                 <td className="">{job.totalApplicants}</td>
-                                                <td className="">{job.deadline}</td>
+                                                <td className="">
+                                                    {
+                                                        new Date(job.applicationDeadline).toLocaleDateString('en-GB', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric'
+                                                        })
+                                                    }
+                                                </td>
                                                 <td className='text-right'>
                                                     <div className="dropdown dropdown-end">
                                                         <label tabIndex={0} className="btn bg-transparent border-none shadow-none m-1 font-bold text-xl hover:bg-transparent">
