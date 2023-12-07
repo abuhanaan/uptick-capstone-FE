@@ -67,7 +67,7 @@ const Jobs = () => {
 
     if (isLoading) {
         return (
-            <div className="font-semibold text-xl h-screen w-full flex justify-center items-center">Loading...</div>
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">Loading...</div>
         )
     }
 

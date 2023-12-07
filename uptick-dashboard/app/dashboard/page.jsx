@@ -17,20 +17,24 @@ async function getData() {
     const token = session.accessToken;
     const baseUrl = process.env.BASE_URL;
 
-    const response = await fetch(`${baseUrl}/admin/home`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        cache: 'no-store',
-    });
-
-    if (response.status === 401 || response.statusText === 'Unauthorized') {
-        redirect('/');
+    try {
+        const response = await fetch(`${baseUrl}/admin/home`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            next: { revalidate: 240 },
+        });
+    
+        if (response.status === 401 || response.statusText === 'Unauthorized') {
+            redirect('/');
+        }
+    
+        return response.json();
+    } catch (error) {
+        throw new Error(response.message);
     }
-
-    return response.json();
 }
 
 const Dashboard = async () => {
