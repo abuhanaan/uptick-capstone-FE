@@ -41,6 +41,30 @@ export const fetchBlogPosts = (accessToken) => {
         });
 };
 
+export const createPost = (accessToken, data) => {
+    return fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Post created successfully:', response);
+                addToast('Post created successfully', { appearance: 'success' });
+            } else {
+                console.error('Error creating post:', response);
+                addToast('Error creating post', { appearance: 'error' });
+            }
+        })
+        .catch(error => {
+            console.error('Error creating post:', error);
+            addToast('Error creating post', { appearance: 'error' });
+        });
+};
+
 const post = {
     "id": 4,
     "title": "How to Build a Personal Brand as a Developer",

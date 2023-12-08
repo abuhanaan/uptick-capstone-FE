@@ -10,7 +10,7 @@ export default function PostPreview({ formData, handleSubmit }) {
             <h1 className='text-2xl font-bold'>{formData.title}</h1>
             <h1 className='text-xl font-bold'>Tags: <span className="font-medium">{formData.tagsText}</span></h1>
 
-            <img src={formData.imageFile} className='w-full' alt="Post image" />
+            <img src={formData.file} className='w-full' alt="Post image" />
 
             <div>
                 {/* <Markdown className='text-sm'> */}

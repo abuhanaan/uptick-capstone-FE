@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +13,7 @@ export default function PostForm({formData, setFormData}) {
         content: '',
         tagsText: ''
     });
+    const [changesSaved, setChangesSaved] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,10 +36,26 @@ export default function PostForm({formData, setFormData}) {
             }
         ));
 
-        toast.success("Changes saved!", {
-            position: toast.POSITION.TOP_CENTER,
-        });
+        setChangesSaved(true);
+
+        // toast.success("Changes saved!", {
+        //     position: toast.POSITION.TOP_CENTER,
+        //     autoClose: 1000,
+        // });
     };
+
+    useEffect(() => {
+        // Show a toast only when changesSaved is true
+        if (changesSaved) {
+            toast.success('Changes saved!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 1000,
+            });
+
+            // Reset changesSaved to false after showing the toast
+            setChangesSaved(false);
+        }
+    }, [changesSaved]);
 
     return (
         <div className='py-10'>
@@ -103,7 +120,7 @@ export default function PostForm({formData, setFormData}) {
                     />
                 </div>
 
-                <ToastContainer />
+                {<ToastContainer />}
 
                 {/* Submit Button */}
                 <button

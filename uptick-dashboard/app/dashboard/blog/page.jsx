@@ -17,7 +17,9 @@ import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 import { getSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
-import { fetchBlogPosts } from 'app/utils/api';
+import { fetchBlogPosts, createPost } from 'app/utils/api';
+import { signIn } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Blog = () => {
     const [data, setData] = useState(null);
@@ -25,7 +27,7 @@ const Blog = () => {
         title: '',
         content: '',
         author: '',
-        imageFile: null,
+        file: null,
         tagsText: '',
         tagsArr: [],
         published: false,
@@ -44,7 +46,54 @@ const Blog = () => {
         if (Object.values(formData).some(value => !value)) {
             console.log('One or more field is empty');
         } else {
-            console.log(formData);
+            const postData = {
+                title: formData.title,
+                content: formData.content,
+                author: formData.author,
+                file: formData.file,
+                tags: formData.tagsArr,
+                published: formData.published,
+                publicationDate: formData.publicationDate
+            };
+
+            getSession()
+                .then(session => {
+                    if (!session) {
+                        return signIn();
+                    }
+
+                    return fetch('https://uptick-teama-capstone.onrender.com/posts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.accessToken}`
+                        },
+                        body: JSON.stringify(postData),
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Post created successfully:', response);
+                        toast.success('Post created successfully', {
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: 1000,
+                        });
+                    } else {
+                        console.error('Error creating post:', response);
+                        toast.success('Error creating post', {
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: 1000,
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating post:', error);
+                    toast.success('Error creating post', {
+                        position: toast.POSITION.TOP_CENTER,
+                        autoClose: 1000,
+                    });
+                });
+
         }
     }
 
@@ -102,6 +151,8 @@ const Blog = () => {
                     <Tabs tabs={tabs} />
                 </Modal>
             </div>
+
+            <ToastContainer />
 
             <div className="h-full overflow-auto">
                 {
