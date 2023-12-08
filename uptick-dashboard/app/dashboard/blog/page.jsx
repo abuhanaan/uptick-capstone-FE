@@ -19,10 +19,34 @@ import { getSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { fetchBlogPosts } from 'app/utils/api';
 
-const Jobs = () => {
+const Blog = () => {
     const [data, setData] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        content: '',
+        author: '',
+        imageFile: null,
+        tagsText: '',
+        tagsArr: [],
+        published: false,
+        publicationDate: null,
+    });
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        formData.published = true;
+        formData.publicationDate = new Date();
+        formData.tagsArr = formData.tagsText.split(/,\s*/);
+
+        if (Object.values(formData).some(value => !value)) {
+            console.log('One or more field is empty');
+        } else {
+            console.log(formData);
+        }
+    }
 
     useEffect(() => {
         const fetchDataFromApi = () => {
@@ -52,15 +76,10 @@ const Jobs = () => {
         fetchDataFromApi();
     }, []);
 
-    const posts = [
-        { id: 1, title: 'Udacity smashed all courses with a 50% discount', body: 'Udacity smashed all courses with a 50% discount. Udacity smashed all courses with a 50% discount', author: 'James Morgan', publishDate: '25 Dec. 2023', image: '/images/post-img.png' },
-        { id: 2, title: 'Google engineered a space ship for developers', body: 'Google engineered a space ship for developers. Google engineered a space ship for developers. Google engineered a space ship for developers', author: "Michael Arthur", publishDate: '01 Dec. 2023', image: '/images/post-img.png' },
-    ];
-
     const tabs = [
-        { id: 'tab1', label: 'Add Image', content: <ImageForm /> },
-        { id: 'tab2', label: 'Post', content: <PostForm /> },
-        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <PostPreview /> }
+        { id: 'tab1', label: 'Add Image', content: <ImageForm setFormData={setFormData} formData={formData} /> },
+        { id: 'tab2', label: 'Post', content: <PostForm setFormData={setFormData} formData={formData} /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <PostPreview formData={formData} handleSubmit={handleSubmit} /> }
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -165,4 +184,4 @@ const Jobs = () => {
     )
 }
 
-export default Jobs
+export default Blog;

@@ -4,40 +4,49 @@ import React from 'react'
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-export default function PostForm() {
-    const [formData, setFormData] = useState({
-        postTitle: '',
+export default function PostForm({formData, setFormData}) {
+    const [data, setData] = useState({
+        title: '',
         author: '',
-        postBody: ''
+        content: '',
+        tagsText: ''
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        setData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
 
-    const handleSubmit = (e) => {
+    const saveChanges = (e) => {
         e.preventDefault();
-        // Add your form submission logic here
-        console.log('Form submitted:', formData);
+        
+        setFormData(prev => (
+            {
+                ...prev,
+                title: data.title,
+                author: data.author,
+                content: data.content,
+                tagsText: data.tagsText
+            }
+        ));
     };
 
     return (
         <div className='py-10'>
-            <form onSubmit={handleSubmit}>
-                {/* Post Title */}
+            <form>
+                {/* Title */}
                 <div className="mb-4">
-                    <label htmlFor="postTitle" className="block text-sm font-bold mb-2">
-                        Post Title
+                    <label htmlFor="title" className="block text-sm font-bold mb-2">
+                        Title
                     </label>
                     <input
                         type="text"
-                        id="postTitle"
-                        name="postTitle"
-                        value={formData.postTitle}
+                        id="title"
+                        name="title"
+                        value={data.title}
                         onChange={handleChange}
                         className="w-full p-2 border rounded-md"
                     />
@@ -52,7 +61,7 @@ export default function PostForm() {
                         type="text"
                         id="author"
                         name="author"
-                        value={formData.author}
+                        value={data.author}
                         onChange={handleChange}
                         className="w-full p-2 border rounded-md"
                     />
@@ -60,21 +69,37 @@ export default function PostForm() {
 
                 {/* Post Body */}
                 <div className="mb-4">
-                    <label htmlFor="postBody" className="block text-sm font-bold mb-2">
+                    <label htmlFor="content" className="block text-sm font-bold mb-2">
                         Post Body (Markdown supported)
                     </label>
                     <textarea
-                        id="postBody"
-                        name="postBody"
-                        value={formData.jobDescription}
+                        id="content"
+                        name="content"
+                        value={data.content}
                         onChange={handleChange}
                         className="w-full p-2 border rounded-md"
                         rows="6"
                     />
                 </div>
 
+                {/* Tags */}
+                <div className="mb-4">
+                    <label htmlFor="tagsText" className="block text-sm font-bold mb-2">
+                        Tags <small>(Comma-separated)</small>
+                    </label>
+                    <input
+                        type="text"
+                        id="tagsText"
+                        name="tagsText"
+                        value={data.tagsText}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-md"
+                    />
+                </div>
+
                 {/* Submit Button */}
                 <button
+                    onClick={saveChanges}
                     className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-10 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
                 >
                     Save Changes

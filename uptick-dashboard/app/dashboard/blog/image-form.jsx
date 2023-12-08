@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { CloseIcon } from '../../components/Icons';
 
-export default function ImageForm() {
+export default function ImageForm({setFormData, formData}) {
     const [selectedImage, setSelectedImage] = useState(null);
     const imageInputRef = useRef(null);
 
@@ -14,6 +14,12 @@ export default function ImageForm() {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setSelectedImage(reader.result);
+                setFormData(prev => (
+                    {
+                        ...prev,
+                        imageFile: image
+                    }
+                ));
             }
             reader.readAsDataURL(image);
         }
@@ -21,6 +27,15 @@ export default function ImageForm() {
 
     function handleImageRemove() {
         setSelectedImage(null);
+    }
+
+    function saveChanges() {
+        setFormData(prev => (
+            {
+                ...prev,
+                imageFile: selectedImage
+            }
+        ));
     }
 
     return (
@@ -49,13 +64,14 @@ export default function ImageForm() {
                             className="hidden"
                             accept="image/*"
                             onChange={handleImageSelect}
-                            multiple
+                            required
                         />
                     </label>
                 </form>
             </div>
 
             <button
+                onClick={saveChanges}
                 className="bg-blue-500 text-white font-medium w-full px-4 py-3 rounded-md mt-10 hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
             >
                 Save Changes

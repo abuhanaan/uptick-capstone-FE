@@ -30,7 +30,6 @@ async function getPost(id) {
 }
 
 const BlogPost = async ({ params }) => {
-    console.log(params);
     const post = await getPost(params.id);
 
     return (
