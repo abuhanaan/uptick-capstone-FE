@@ -39,12 +39,15 @@ const Blog = () => {
     function handleSubmit(e) {
         e.preventDefault();
 
-        formData.published = true;
-        formData.publicationDate = new Date();
+        formData.publicationDate = new Date(formData.publicationDate).toISOString();
         formData.tagsArr = formData.tagsText.split(/,\s*/);
 
         if (Object.values(formData).some(value => !value)) {
-            console.log('One or more field is empty');
+            console.log('One or more fields is empty');
+            toast.error('Kindly fill all required fields', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
         } else {
             const postData = {
                 title: formData.title,
@@ -56,12 +59,15 @@ const Blog = () => {
                 publicationDate: formData.publicationDate
             };
 
+            console.log(postData);
+
             getSession()
                 .then(session => {
                     if (!session) {
                         return signIn();
                     }
 
+                    console.log(session);
                     return fetch('https://uptick-teama-capstone.onrender.com/posts', {
                         method: 'POST',
                         headers: {
@@ -72,18 +78,23 @@ const Blog = () => {
                     });
                 })
                 .then(response => {
-                    if (response.ok) {
+                    if (response.statusCode === 201) {
                         console.log('Post created successfully:', response);
                         toast.success('Post created successfully', {
                             position: toast.POSITION.TOP_CENTER,
-                            autoClose: 1000,
+                            autoClose: 2000,
                         });
                     } else {
                         console.error('Error creating post:', response);
                         toast.success('Error creating post', {
                             position: toast.POSITION.TOP_CENTER,
-                            autoClose: 1000,
+                            autoClose: 2000,
                         });
+
+                        return response.json().then(errorData => {
+                            throw new Error(`Error creating post: ${errorData.message}`);
+                        });
+            
                     }
                 })
                 .catch(error => {
@@ -140,7 +151,7 @@ const Blog = () => {
     }
 
     return (
-        <div className="mt-6 h-screen">
+        <div className="mt-6 min-h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Blog Posts</h1>
 

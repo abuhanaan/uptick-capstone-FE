@@ -6,33 +6,39 @@ import ReactMarkdown from 'react-markdown';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function PostForm({formData, setFormData}) {
+export default function PostForm({ formData, setFormData }) {
     const [data, setData] = useState({
         title: '',
         author: '',
         content: '',
-        tagsText: ''
+        tagsText: '',
+        publicationDate: '',
+        published: false
     });
     const [changesSaved, setChangesSaved] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, checked, type } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
+
         setData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: newValue,
         }));
     };
 
     const saveChanges = (e) => {
         e.preventDefault();
-        
+
         setFormData(prev => (
             {
                 ...prev,
                 title: data.title,
                 author: data.author,
                 content: data.content,
-                tagsText: data.tagsText
+                tagsText: data.tagsText,
+                publicationDate: data.publicationDate,
+                published: data.published
             }
         ));
 
@@ -118,6 +124,37 @@ export default function PostForm({formData, setFormData}) {
                         onChange={handleChange}
                         className="w-full p-2 border rounded-md"
                     />
+                </div>
+
+                {/* Published date */}
+                <div className="mb-4">
+                    <label htmlFor="publicationDate" className="block text-sm font-bold mb-2">
+                        Publication Date
+                    </label>
+                    <input
+                        type="date"
+                        id="publicationDate"
+                        name="publicationDate"
+                        value={data.publicationDate}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-md"
+                    />
+                </div>
+
+                {/* Published */}
+                <div className="mb-4">
+                    <label htmlFor="publicationDate" className="block text-sm font-bold mb-2">
+                        Publish
+                    </label>
+                    <input
+                        type="checkbox"
+                        id="published"
+                        name="published"
+                        checked={data.published}
+                        onChange={handleChange}
+                        className="mr-2"
+                    />
+                    <span className="text-sm">Check to publish</span>
                 </div>
 
                 {<ToastContainer />}

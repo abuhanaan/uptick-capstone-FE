@@ -9,12 +9,24 @@ export default function PostPreview({ formData, handleSubmit }) {
 
             <h1 className='text-2xl font-bold'>{formData.title}</h1>
             <h1 className='text-xl font-bold'>Tags: <span className="font-medium">{formData.tagsText}</span></h1>
+            <h1 className='text-xl font-bold'>Published date:
+                <span className="font-medium ml-2">
+                    {
+                        new Date(formData.publicationDate).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        })
+                    }
+                </span>
+            </h1>
+            <h1 className='text-xl font-bold'>isPublished: <span className="font-medium">{formData.published ? 'true' : 'false'}</span></h1>
 
             <img src={formData.file} className='w-full' alt="Post image" />
 
-            <div>
+            <div className=''>
                 {/* <Markdown className='text-sm'> */}
-                <p className=''>
+                <p className='whitespace-normal'>
                     {formData.content}
                 </p>
                 {/* </Markdown> */}
