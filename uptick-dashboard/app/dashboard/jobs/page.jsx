@@ -65,7 +65,7 @@ const Jobs = () => {
     }
 
     return (
-        <div className="mt-6 h-screen w-full">
+        <div className="mt-6 min-h-screen w-full">
             <div className="flex justify-between items-center mb-6 w-full">
                 <h1 className="text-[#15254C] text-2xl font-bold">Jobs</h1>
 

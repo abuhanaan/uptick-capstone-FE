@@ -9,7 +9,7 @@ const TalentBusiness = () => {
     ];
 
     return (
-        <div className="mt-6 flex flex-col h-screen">
+        <div className="mt-6 flex flex-col min-h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Talent Business</h1>
 
