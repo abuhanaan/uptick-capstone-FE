@@ -2,8 +2,10 @@
 
 import { useState, useRef } from "react";
 import { CloseIcon } from '../../components/Icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function ImageForm({setFormData, formData}) {
+export default function ImageForm({ setFormData, formData }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const imageInputRef = useRef(null);
 
@@ -36,6 +38,10 @@ export default function ImageForm({setFormData, formData}) {
                 imageFile: selectedImage
             }
         ));
+
+        toast.success("Changes saved!", {
+            position: toast.POSITION.TOP_CENTER,
+        });
     }
 
     return (
@@ -69,6 +75,8 @@ export default function ImageForm({setFormData, formData}) {
                     </label>
                 </form>
             </div>
+
+            <ToastContainer />
 
             <button
                 onClick={saveChanges}

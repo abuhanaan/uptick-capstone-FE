@@ -3,6 +3,8 @@
 import React from 'react'
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PostForm({formData, setFormData}) {
     const [data, setData] = useState({
@@ -32,6 +34,10 @@ export default function PostForm({formData, setFormData}) {
                 tagsText: data.tagsText
             }
         ));
+
+        toast.success("Changes saved!", {
+            position: toast.POSITION.TOP_CENTER,
+        });
     };
 
     return (
@@ -96,6 +102,8 @@ export default function PostForm({formData, setFormData}) {
                         className="w-full p-2 border rounded-md"
                     />
                 </div>
+
+                <ToastContainer />
 
                 {/* Submit Button */}
                 <button
