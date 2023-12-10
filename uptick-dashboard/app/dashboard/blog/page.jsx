@@ -49,6 +49,7 @@ const Blog = () => {
                 position: toast.POSITION.TOP_CENTER,
                 autoClose: 2000,
             });
+            return;
         } else {
             const postData = {
                 title: formData.title,
@@ -118,20 +119,15 @@ const Blog = () => {
                         });
                     } else {
                         console.error('Error creating post:', response);
-                        toast.success('Error creating post', {
+                        toast.error('Error creating post', {
                             position: toast.POSITION.TOP_CENTER,
                             autoClose: 2000,
                         });
-
-                        // return response.json().then(errorData => {
-                        //     throw new Error(`Error creating post: ${errorData.message}`);
-                        // });
-
                     }
                 })
                 .catch(error => {
                     console.error('Error creating post:', error);
-                    toast.success('Error creating post', {
+                    toast.error('Error creating post', {
                         position: toast.POSITION.TOP_CENTER,
                         autoClose: 1000,
                     });

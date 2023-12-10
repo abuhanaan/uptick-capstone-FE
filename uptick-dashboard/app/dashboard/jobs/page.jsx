@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { fetchJobsData } from 'app/utils/api';
 import { signIn } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 
 const Jobs = () => {
     const [data, setData] = useState(null);
@@ -37,7 +38,12 @@ const Jobs = () => {
         startDate: '',
         endDate: '',
     });
-
+    const tabs = [
+        { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm setFormData={setFormData} /> },
+        { id: 'tab2', label: 'Job Description', content: <JdForm setFormData={setFormData} /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <JobPreview formData={formData} handleSubmit={handleSubmit} /> }
+    ];
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
@@ -72,84 +78,86 @@ const Jobs = () => {
     function handleSubmit(e) {
         e.preventDefault();
 
-        console.log(formData);
+        if (Object.values(formData).some(value => !value)) {
+            console.log('One or more fields is empty');
+            toast.error('Kindly fill all required fields', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+            return;
+        } else {
+            console.log(formData);
 
-        // formData.publicationDate = new Date(formData.publicationDate).toISOString();
-        // formData.tagsArr = formData.tagsText.split(/,\s*/);
+            getSession()
+                .then(session => {
+                    if (!session) {
+                        return signIn();
+                    }
 
-        // if (Object.values(formData).some(value => !value)) {
-        //     console.log('One or more fields is empty');
-        //     toast.error('Kindly fill all required fields', {
-        //         position: toast.POSITION.TOP_CENTER,
-        //         autoClose: 2000,
-        //     });
-        // } else {
-        //     const postData = {
-        //         title: formData.title,
-        //         content: formData.content,
-        //         author: formData.author,
-        //         file: formData.file,
-        //         tags: formData.tagsArr,
-        //         published: formData.published,
-        //         publicationDate: formData.publicationDate
-        //     };
+                    console.log('TOKEN: ', session.accessToken);
+                    axios.post('https://uptick-teama-capstone.onrender.com/jobs', formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.accessToken}`
+                        }
+                    })
+                        .then(response => {
+                            console.log('Job created successfully:', response.data);
+                            toast.success('Job created successfully', {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 2000,
+                            });
 
-        //     console.log(postData);
+                        })
+                        .catch(error => {
+                            console.error('Error creating job:', error.response || error);
+                            toast.error('Error creating job', {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 2000,
+                            });
+                        });
+                })
 
-        //     getSession()
-        //         .then(session => {
-        //             if (!session) {
-        //                 return signIn();
-        //             }
+            // getSession()
+            //     .then(session => {
+            //         if (!session.accessToken) {
+            //             return signIn();
+            //         }
 
-        //             console.log(session);
-        //             return fetch('https://uptick-teama-capstone.onrender.com/jobs', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': `Bearer ${session.accessToken}`
-        //                 },
-        //                 body: JSON.stringify(postData),
-        //             });
-        //         })
-        //         .then(response => {
-        //             if (response.statusCode === 201) {
-        //                 console.log('Post created successfully:', response);
-        //                 toast.success('Post created successfully', {
-        //                     position: toast.POSITION.TOP_CENTER,
-        //                     autoClose: 2000,
-        //                 });
-        //             } else {
-        //                 console.error('Error creating post:', response);
-        //                 toast.success('Error creating post', {
-        //                     position: toast.POSITION.TOP_CENTER,
-        //                     autoClose: 2000,
-        //                 });
+            //         return fetch('https://uptick-teama-capstone.onrender.com/jobs', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': `Bearer ${session.accessToken}`
+            //             },
+            //             body: JSON.stringify(formData),
+            //         });
+            //     })
+            //     .then(response => {
+            //         if (response.ok) {
+            //             console.log('Job created successfully:', response);
+            //             toast.success('Post created successfully', {
+            //                 position: toast.POSITION.TOP_CENTER,
+            //                 autoClose: 2000,
+            //             });
+            //         } else {
+            //             console.error('Error creating job:', response);
+            //             toast.error('Error creating job', {
+            //                 position: toast.POSITION.TOP_CENTER,
+            //                 autoClose: 2000,
+            //             });
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error('Error creating job:', error);
+            //         toast.error('Error creating job', {
+            //             position: toast.POSITION.TOP_CENTER,
+            //             autoClose: 2000,
+            //         });
+            //     });
 
-        //                 return response.json().then(errorData => {
-        //                     throw new Error(`Error creating post: ${errorData.message}`);
-        //                 });
-            
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error creating post:', error);
-        //             toast.success('Error creating post', {
-        //                 position: toast.POSITION.TOP_CENTER,
-        //                 autoClose: 1000,
-        //             });
-        //         });
-
-        // }
+        }
     }
-
-    const tabs = [
-        { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm setFormData={setFormData} /> },
-        { id: 'tab2', label: 'Job Description', content: <JdForm setFormData={setFormData} /> },
-        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <JobPreview formData={formData} handleSubmit={handleSubmit} /> }
-    ];
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (isLoading) {
         return (
@@ -159,6 +167,7 @@ const Jobs = () => {
 
     return (
         <div className="mt-6 min-h-screen w-full">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-6 w-full">
                 <h1 className="text-[#15254C] text-2xl font-bold">Jobs</h1>
 
