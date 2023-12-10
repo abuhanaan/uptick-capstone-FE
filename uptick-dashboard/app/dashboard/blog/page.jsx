@@ -36,6 +36,9 @@ const Blog = () => {
     });
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const baseUrl = process.env.NEXT_BASE_URL;
+
+    console.log(baseUrl);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -69,33 +72,34 @@ const Blog = () => {
             //             return signIn();
             //         }
 
-            //         console.log('TOKEN: ', session.accessToken);
-            //         axios.post('https://uptick-teama-capstone.onrender.com/posts', postData, {
-            //             headers: {
-            //                 'Content-Type': 'application/json',
-            //                 'Authorization': `Bearer ${session.accessToken}`
-            //             }
-            //         })
-            //             .then(response => {
-            //                 console.log('Post created successfully:', response.data);
-            //                 toast.success('Post created successfully', {
-            //                     position: toast.POSITION.TOP_CENTER,
-            //                     autoClose: 2000,
-            //                 });
+                    // console.log('TOKEN: ', session.accessToken);
+                    // axios.post('https://uptick-teama-capstone.onrender.com/posts', postData, {
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'Authorization': `Bearer ${session.accessToken}`
+                    //     }
+                    // })
+                    //     .then(response => {
+                    //         console.log('Post created successfully:', response.data);
+                    //         toast.success('Post created successfully', {
+                    //             position: toast.POSITION.TOP_CENTER,
+                    //             autoClose: 2000,
+                    //         });
 
-            //             })
-            //             .catch(error => {
-            //                 console.error('Error creating post:', error.response || error);
-            //                 toast.error('Error creating post', {
-            //                     position: toast.POSITION.TOP_CENTER,
-            //                     autoClose: 2000,
-            //                 });
-            //             });
+                    //     })
+                    //     .catch(error => {
+                    //         console.error('Error creating post:', error.response || error);
+                    //         toast.error('Error creating post', {
+                    //             position: toast.POSITION.TOP_CENTER,
+                    //             autoClose: 2000,
+                    //         });
+                    //     });
             //     })
 
             getSession()
                 .then(session => {
-                    if (!session) {
+                    if (!session.accessToken) {
+                        // router.replace('/');
                         return signIn();
                     }
 

@@ -1,7 +1,6 @@
 
 export const fetchJobsData = (accessToken) => {
-    return fetch(`https://upthick-talent-teama.onrender.com/jobs?openJobs=true&closedJobs=true
-    `, {
+    return fetch(`https://upthick-talent-teama.onrender.com/jobs?openJobs=true&closedJobs=true`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -22,7 +21,7 @@ export const fetchJobsData = (accessToken) => {
 };
 
 export const fetchBlogPosts = (accessToken) => {
-    return fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
+    return fetch(`https://upthick-talent-teama.onrender.com/posts`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

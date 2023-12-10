@@ -15,10 +15,12 @@ import { redirect } from 'next/navigation';
 async function getData() {
     const session = await getServerSession(authOptions);
     const token = session.accessToken;
-    const baseUrl = process.env.BASE_URL;
+    const baseUrl = process.env.NEXT_BASE_URL;
+
+    console.log(baseUrl);
 
     try {
-        const response = await fetch(`${baseUrl}/admin/home`, {
+        const response = await fetch(`https://upthick-talent-teama.onrender.com/admin/home`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +35,8 @@ async function getData() {
     
         return response.json();
     } catch (error) {
-        throw new Error(response.message);
+        console.log(error);
+        throw new Error(error.message);
     }
 }
 

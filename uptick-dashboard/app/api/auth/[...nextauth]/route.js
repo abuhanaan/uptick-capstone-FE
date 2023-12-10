@@ -10,7 +10,7 @@ export const authOptions = {
 
             async authorize(credentials) {
                 const { username, password } = credentials;
-                const baseUrl = process.env.BASE_URL;
+                const baseUrl = process.env.NEXT_BASE_URL;
 
                 try {
                     const response = await fetch(`${baseUrl}/auth/login`, {

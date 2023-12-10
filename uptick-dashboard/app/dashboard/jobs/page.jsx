@@ -46,6 +46,8 @@ const Jobs = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const baseUrl = process.env.NEXT_BASE_URL;
+    console.log(baseUrl);
 
     useEffect(() => {
         const fetchDataFromApi = () => {
