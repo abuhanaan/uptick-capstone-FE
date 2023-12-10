@@ -13,8 +13,8 @@ const Layout = ({ children }) => {
                 <SideNav />
             </div>
 
-            <div className='flex-grow'>
-                <div className="navbar hidden md:flex md:justify-end">
+            <div className='flex-grow flex flex-col min-h-screen'>
+                <div className="navbar hidden md:flex md:justify-end h-[64px]">
                     <div className="flex justify-end gap-6 w-full">
                         <div className="dropdown dropdown-end">
                             <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -51,7 +51,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
 
-                <div className='flex-1 min-h-full overflow-y-auto p-6 md:pb-8 md:pt-4 bg-[#EDF2FF]'>
+                <div className='flex-1 overflow-y-auto p-6 md:pb-8 md:pt-4 bg-[#EDF2FF]'>
                     {children}
                 </div>
             </div>

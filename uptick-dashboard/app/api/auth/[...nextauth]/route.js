@@ -10,7 +10,7 @@ export const authOptions = {
 
             async authorize(credentials) {
                 const { username, password } = credentials;
-                const baseUrl = process.env.BASE_URL;
+                const baseUrl = process.env.NEXT_BASE_URL;
 
                 try {
                     const response = await fetch(`${baseUrl}/auth/login`, {
@@ -48,43 +48,16 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                // console.log('received user from jwt:', user);
                 token.accessToken = user.accessToken;
                 
                 // Decode token and get the payload
                 // const decodedToken = JSON.parse(Buffer.from(user.accessToken.split('.')[1], 'base64').toString('utf-8'));
-
-                // return {
-                //     userId: decodedToken.userId,
-                //     role: decodedToken.role,
-                //     username: user.username,
-                //     issuedAt: decodedToken.iat,
-                //     expires: decodedToken.exp,
-                //     accessToken: user.accessToken,
-                // }
             }
             return token;
         },
         async session({ session, token, user }) {
-
-            // console.log('user received in session', token);
             session.accessToken = token.accessToken;
-            // console.log('session to be returned:', session);
-
             return session;
-
-            // const expires = new Date(token.expires * 1000);
-            
-            // if (token) {
-            //     session.user.userId = token.userId;
-            //     session.user.username = token.username;
-            //     session.user.role = token.role;
-            //     session.iat = token.issuedAt;
-            //     session.exp = new Date(token.expires).valueOf();
-            //     session.expires = expires;
-            //     session.accessToken = token.accessToken;
-            // }
-            // return session;
         }
     }
 };

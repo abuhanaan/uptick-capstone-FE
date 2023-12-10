@@ -16,11 +16,38 @@ import { useState, useEffect } from 'react';
 import { getSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { fetchJobsData } from 'app/utils/api';
+import { signIn } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 
 const Jobs = () => {
     const [data, setData] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        companyName: '',
+        file: null,
+        companyDescription: '',
+        description: '',
+        requirements: '',
+        jobMode: '',
+        jobCategory: '',
+        location: '',
+        jobType: '',
+        applicationFormLink: '',
+        applicationDeadline: '',
+        startDate: '',
+        endDate: '',
+    });
+    const tabs = [
+        { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm setFormData={setFormData} /> },
+        { id: 'tab2', label: 'Job Description', content: <JdForm setFormData={setFormData} /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <JobPreview formData={formData} handleSubmit={handleSubmit} /> }
+    ];
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const baseUrl = process.env.NEXT_BASE_URL;
+    console.log(baseUrl);
 
     useEffect(() => {
         const fetchDataFromApi = () => {
@@ -50,22 +77,99 @@ const Jobs = () => {
         fetchDataFromApi();
     }, []);
 
-    const tabs = [
-        { id: 'tab1', label: 'Add Thumbnail', content: <ThumbnailForm /> },
-        { id: 'tab2', label: 'Job Description', content: <JdForm /> },
-        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <JobPreview /> }
-    ];
+    function handleSubmit(e) {
+        e.preventDefault();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+        if (Object.values(formData).some(value => !value)) {
+            console.log('One or more fields is empty');
+            toast.error('Kindly fill all required fields', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+            return;
+        } else {
+            console.log(formData);
+
+            getSession()
+                .then(session => {
+                    if (!session) {
+                        return signIn();
+                    }
+
+                    console.log('TOKEN: ', session.accessToken);
+                    axios.post('https://uptick-teama-capstone.onrender.com/jobs', formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.accessToken}`
+                        }
+                    })
+                        .then(response => {
+                            console.log('Job created successfully:', response.data);
+                            toast.success('Job created successfully', {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 2000,
+                            });
+
+                        })
+                        .catch(error => {
+                            console.error('Error creating job:', error.response || error);
+                            toast.error('Error creating job', {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 2000,
+                            });
+                        });
+                })
+
+            // getSession()
+            //     .then(session => {
+            //         if (!session.accessToken) {
+            //             return signIn();
+            //         }
+
+            //         return fetch('https://uptick-teama-capstone.onrender.com/jobs', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': `Bearer ${session.accessToken}`
+            //             },
+            //             body: JSON.stringify(formData),
+            //         });
+            //     })
+            //     .then(response => {
+            //         if (response.ok) {
+            //             console.log('Job created successfully:', response);
+            //             toast.success('Post created successfully', {
+            //                 position: toast.POSITION.TOP_CENTER,
+            //                 autoClose: 2000,
+            //             });
+            //         } else {
+            //             console.error('Error creating job:', response);
+            //             toast.error('Error creating job', {
+            //                 position: toast.POSITION.TOP_CENTER,
+            //                 autoClose: 2000,
+            //             });
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error('Error creating job:', error);
+            //         toast.error('Error creating job', {
+            //             position: toast.POSITION.TOP_CENTER,
+            //             autoClose: 2000,
+            //         });
+            //     });
+
+        }
+    }
 
     if (isLoading) {
         return (
-            <div className="font-semibold text-xl h-screen w-full flex justify-center items-center">Loading...</div>
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">Loading...</div>
         )
     }
 
     return (
-        <div className="mt-6 h-screen w-full">
+        <div className="mt-6 min-h-screen w-full">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-6 w-full">
                 <h1 className="text-[#15254C] text-2xl font-bold">Jobs</h1>
 

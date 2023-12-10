@@ -9,7 +9,7 @@ const TalentMap = () => {
     ];
 
     return (
-        <div className="mt-6 h-screen">
+        <div className="mt-6 min-h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Talent Map</h1>
 

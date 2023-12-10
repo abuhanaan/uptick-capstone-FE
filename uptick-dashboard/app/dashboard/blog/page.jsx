@@ -17,12 +17,128 @@ import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 import { getSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
-import { fetchBlogPosts } from 'app/utils/api';
+import { fetchBlogPosts, createPost } from 'app/utils/api';
+import { signIn } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 
-const Jobs = () => {
+const Blog = () => {
     const [data, setData] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        content: '',
+        author: '',
+        file: null,
+        tagsText: '',
+        tagsArr: [],
+        published: false,
+        publicationDate: null,
+    });
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const baseUrl = process.env.NEXT_BASE_URL;
+
+    console.log(baseUrl);
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        formData.publicationDate = new Date(formData.publicationDate).toISOString();
+        formData.tagsArr = formData.tagsText.split(/,\s*/);
+
+        if (Object.values(formData).some(value => !value)) {
+            console.log('One or more fields is empty');
+            toast.error('Kindly fill all required fields', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+            return;
+        } else {
+            const postData = {
+                title: formData.title,
+                content: formData.content,
+                author: formData.author,
+                file: formData.file,
+                tags: formData.tagsArr,
+                published: formData.published,
+                publicationDate: formData.publicationDate
+            };
+
+            console.log(postData);
+
+            // getSession()
+            //     .then(session => {
+            //         if (!session) {
+            //             return signIn();
+            //         }
+
+                    // console.log('TOKEN: ', session.accessToken);
+                    // axios.post('https://uptick-teama-capstone.onrender.com/posts', postData, {
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'Authorization': `Bearer ${session.accessToken}`
+                    //     }
+                    // })
+                    //     .then(response => {
+                    //         console.log('Post created successfully:', response.data);
+                    //         toast.success('Post created successfully', {
+                    //             position: toast.POSITION.TOP_CENTER,
+                    //             autoClose: 2000,
+                    //         });
+
+                    //     })
+                    //     .catch(error => {
+                    //         console.error('Error creating post:', error.response || error);
+                    //         toast.error('Error creating post', {
+                    //             position: toast.POSITION.TOP_CENTER,
+                    //             autoClose: 2000,
+                    //         });
+                    //     });
+            //     })
+
+            getSession()
+                .then(session => {
+                    if (!session.accessToken) {
+                        // router.replace('/');
+                        return signIn();
+                    }
+
+                    console.log('TOKEN: ', session.accessToken);
+                    return fetch('https://uptick-teama-capstone.onrender.com/posts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.accessToken}`
+                        },
+                        body: JSON.stringify(postData),
+                    });
+                })
+                .then(response => {
+                    console.log(response)
+                    if (response.ok) {
+                        console.log('Post created successfully:', response);
+                        toast.success('Post created successfully', {
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: 2000,
+                        });
+                    } else {
+                        console.error('Error creating post:', response);
+                        toast.error('Error creating post', {
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: 2000,
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating post:', error);
+                    toast.error('Error creating post', {
+                        position: toast.POSITION.TOP_CENTER,
+                        autoClose: 1000,
+                    });
+                });
+
+        }
+    }
 
     useEffect(() => {
         const fetchDataFromApi = () => {
@@ -52,27 +168,22 @@ const Jobs = () => {
         fetchDataFromApi();
     }, []);
 
-    const posts = [
-        { id: 1, title: 'Udacity smashed all courses with a 50% discount', body: 'Udacity smashed all courses with a 50% discount. Udacity smashed all courses with a 50% discount', author: 'James Morgan', publishDate: '25 Dec. 2023', image: '/images/post-img.png' },
-        { id: 2, title: 'Google engineered a space ship for developers', body: 'Google engineered a space ship for developers. Google engineered a space ship for developers. Google engineered a space ship for developers', author: "Michael Arthur", publishDate: '01 Dec. 2023', image: '/images/post-img.png' },
-    ];
-
     const tabs = [
-        { id: 'tab1', label: 'Add Image', content: <ImageForm /> },
-        { id: 'tab2', label: 'Post', content: <PostForm /> },
-        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <PostPreview /> }
+        { id: 'tab1', label: 'Add Image', content: <ImageForm setFormData={setFormData} formData={formData} /> },
+        { id: 'tab2', label: 'Post', content: <PostForm setFormData={setFormData} formData={formData} /> },
+        { id: 'tab3', label: <span className='flex items-center gap-2'>Preview <PreviewIcon /></span>, content: <PostPreview formData={formData} handleSubmit={handleSubmit} /> }
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (isLoading) {
         return (
-            <div className="font-semibold text-xl h-screen w-full flex justify-center items-center">Loading...</div>
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">Loading...</div>
         )
     }
 
     return (
-        <div className="mt-6 h-screen">
+        <div className="mt-6 min-h-screen">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Blog Posts</h1>
 
@@ -83,6 +194,8 @@ const Jobs = () => {
                     <Tabs tabs={tabs} />
                 </Modal>
             </div>
+
+            <ToastContainer />
 
             <div className="h-full overflow-auto">
                 {
@@ -165,4 +278,4 @@ const Jobs = () => {
     )
 }
 
-export default Jobs
+export default Blog;
