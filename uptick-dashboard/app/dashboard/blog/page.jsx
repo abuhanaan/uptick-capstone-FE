@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { fetchBlogPosts, createPost } from 'app/utils/api';
 import { signIn } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 
 const Blog = () => {
     const [data, setData] = useState(null);
@@ -61,13 +62,43 @@ const Blog = () => {
 
             console.log(postData);
 
+            // getSession()
+            //     .then(session => {
+            //         if (!session) {
+            //             return signIn();
+            //         }
+
+            //         console.log('TOKEN: ', session.accessToken);
+            //         axios.post('https://uptick-teama-capstone.onrender.com/posts', postData, {
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': `Bearer ${session.accessToken}`
+            //             }
+            //         })
+            //             .then(response => {
+            //                 console.log('Post created successfully:', response.data);
+            //                 toast.success('Post created successfully', {
+            //                     position: toast.POSITION.TOP_CENTER,
+            //                     autoClose: 2000,
+            //                 });
+
+            //             })
+            //             .catch(error => {
+            //                 console.error('Error creating post:', error.response || error);
+            //                 toast.error('Error creating post', {
+            //                     position: toast.POSITION.TOP_CENTER,
+            //                     autoClose: 2000,
+            //                 });
+            //             });
+            //     })
+
             getSession()
                 .then(session => {
                     if (!session) {
                         return signIn();
                     }
 
-                    console.log(session);
+                    console.log('TOKEN: ', session.accessToken);
                     return fetch('https://uptick-teama-capstone.onrender.com/posts', {
                         method: 'POST',
                         headers: {
@@ -78,7 +109,8 @@ const Blog = () => {
                     });
                 })
                 .then(response => {
-                    if (response.statusCode === 201) {
+                    console.log(response)
+                    if (response.ok) {
                         console.log('Post created successfully:', response);
                         toast.success('Post created successfully', {
                             position: toast.POSITION.TOP_CENTER,
@@ -91,10 +123,10 @@ const Blog = () => {
                             autoClose: 2000,
                         });
 
-                        return response.json().then(errorData => {
-                            throw new Error(`Error creating post: ${errorData.message}`);
-                        });
-            
+                        // return response.json().then(errorData => {
+                        //     throw new Error(`Error creating post: ${errorData.message}`);
+                        // });
+
                     }
                 })
                 .catch(error => {

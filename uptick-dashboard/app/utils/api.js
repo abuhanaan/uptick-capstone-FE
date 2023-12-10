@@ -7,6 +7,7 @@ export const fetchJobsData = (accessToken) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
         },
+        next: { revalidate: 1200 },
     })
         .then(response => {
             if (!response.ok) {
