@@ -1,3 +1,4 @@
+import {redirect} from 'next/navigation';
 
 export const fetchJobsData = (accessToken) => {
     return fetch(`https://uptick-teama-capstone.onrender.com/jobs?openJobs=true&closedJobs=true`, {
@@ -58,8 +59,9 @@ export const fetchProgramApplicants = (accessToken, program) => {
         .then(response => {
             if (!response.ok) {
                 // throw new Error('Failed to fetch data');
-                console.log(response)
+                // console.log(response)
                 if (response.status === 401) {
+                    // return redirect('/')
                     return {authError: 'Unauthorized'};
                 }
                 return {error: 'Failed to fetch data'};

@@ -25,9 +25,10 @@ const Program = ({ params }) => {
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedApplicant, setSelectedApplicant] = useState(null);
     const router = useRouter();
 
     const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
@@ -40,28 +41,25 @@ const Program = ({ params }) => {
                 const response = await fetchProgramApplicants(session.accessToken, programTitle);
 
                 if (response.authError) {
-                    router.replace('/');
+                    return router.replace('/');
                 }
 
                 if (response.error) {
                     setError(response.error);
                     setLoading(false)
-                    return;
                 }
 
                 setData(response);
                 setLoading(false);
-
-                console.log(response)
             } else {
-                router.replace('/');
+                return router.replace('/');
             }
         };
 
         fetchDataFromApi();
     }, []);
 
-    // console.log(data);
+    // console.log(selectedApplicant);
 
     if (loading) {
         return (
@@ -71,7 +69,7 @@ const Program = ({ params }) => {
 
     if (error) {
         return (
-            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">
+            <div className="font-semibold text-xl h-screen w-full mx-auto mt-20">
                 <p>Something went wrong :(</p>
                 <p>{error}</p>
             </div>
@@ -136,7 +134,7 @@ const Program = ({ params }) => {
                                                     }
                                                 </td>
                                                 <th className="text-end">
-                                                    <ViewDetailsBtn toggleModal={setIsModalOpen} applicantId={applicant.id}>View details</ViewDetailsBtn>
+                                                    <ViewDetailsBtn toggleModal={setIsModalOpen} applicant={applicant} setSelectedApplicant={setSelectedApplicant}>View details</ViewDetailsBtn>
                                                 </th>
                                             </tr>
                                         ))
@@ -159,60 +157,98 @@ const Program = ({ params }) => {
             </div>
 
             {/* Applicant's Details Modal */}
-            <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen} data={data}>
+            <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
                 <div className="flex flex-col gap-y-3 pb-3">
-                    <button className="btn bg-[#999999] text-white self-start">
+                    <Link href={selectedApplicant?.resume} target='_blank' className="btn bg-[#999999] text-white self-start">
                         Download Resume/CV
-                    </button>
+                    </Link>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Full Name</h3>
-                        <p className="text-[#5988FF]">Oreoluwa Christopher</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.firstname} {selectedApplicant?.lastName}</p>
                     </div>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Email</h3>
-                        <p className="text-[#5988FF]">oreoluwa@yahoo.com</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.email}</p>
                     </div>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Phone Number</h3>
-                        <p className="text-[#5988FF]">+234 901 777 9568</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.phone}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Current company</h3>
-                        <p className="text-[#5988FF]">CitiServe, Lagos</p>
+                        <h3 className="mb-1">Residential Address</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.address}, {selectedApplicant?.city}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">LinkedIn URL</h3>
-                        <Link href='https://linkedin.com/in/oreoluwa' className="text-[#5988FF]">https://linkedin.com/in/oreoluwa</Link>
+                        <h3 className="mb-1">Application Date</h3>
+                        <p className="text-[#5988FF]">
+                            {
+                                new Date(selectedApplicant?.applicationDate).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                })
+                            }
+                        </p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Twitter URL</h3>
-                        <Link href='https://twitter.com/oreoluwa' className="text-[#5988FF]">https://twitter.com/oreoluwa</Link>
+                        <h3 className="mb-1">Availability</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.availability}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Github URL</h3>
-                        <Link href='https://github.com/oreoluwa' className="text-[#5988FF]">https://github.com/oreoluwa</Link>
+                        <h3 className="mb-1">Career Goal</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.careerGoals}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Portfolio URL</h3>
-                        <Link href='https://portfolio.com' className="text-[#5988FF]">https://portfolio.com</Link>
+                        <h3 className="mb-1">GitHub Link</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.githubLink}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Other Websites</h3>
-                        <Link href='https://otherwebsites.com' className="text-[#5988FF]">https://otherwebsites.com</Link>
+                        <h3 className="mb-1">Portfolio Link / Link to Previous Project</h3>
+                        <Link href={selectedApplicant?.portfolioLink} className="text-[#5988FF]">{selectedApplicant?.portfolioLink}</Link>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1 capitalize">Additional Information</h3>
-                        <p className="text-[#5988FF]">Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants...</p>
+                        <h3 className="mb-1">Program Category</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.programCategory}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Program Type</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.programType}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Status</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.status}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Track</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.track}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Type</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.type}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Years of Experience</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.yearsOfExp}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Fellowship Info</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.fellowshipInfo}</p>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm mt-4">
