@@ -13,22 +13,12 @@ import { useRouter } from 'next/navigation';
 import { EmptySearch } from 'app/components/empty-search';
 
 const Program = ({ params }) => {
-    const applicants = [
-        { id: 1, name: 'Adam', track: 'Frontend', status: 'Accepted', date: '12/12/2022' },
-        { id: 2, name: 'Monsur', track: 'Backend', status: 'Rejected', date: '12/12/2022' },
-        { id: 3, name: 'Precious', track: 'Mobile', status: 'Pending', date: '12/12/2022' },
-        { id: 4, name: 'Maryam', track: 'Fullstack', status: 'Accepted', date: '12/12/2022' },
-        { id: 5, name: 'Alice', track: 'Frontend', status: 'Accepted', date: '12/12/2022' },
-        { id: 6, name: 'Martha', track: 'Backend', status: 'Rejected', date: '12/12/2022' },
-        { id: 7, name: 'Ahmad', track: 'Mobile', status: 'Pending', date: '12/12/2022' },
-        { id: 8, name: 'James', track: 'Fullstack', status: 'Accepted', date: '12/12/2022' },
-    ];
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedApplicant, setSelectedApplicant] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(null);
     const router = useRouter();
 
     const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
@@ -59,7 +49,16 @@ const Program = ({ params }) => {
         fetchDataFromApi();
     }, []);
 
-    // console.log(selectedApplicant);
+    function handleRadioChange(e) {
+        const selected = e.target.value;
+        console.log(selected);
+        setSelectedStatus(selected);
+
+        setSelectedApplicant(prev => ({
+            ...prev,
+            status: selected
+        }));
+    }
 
     if (loading) {
         return (
@@ -253,11 +252,11 @@ const Program = ({ params }) => {
 
                     <div className="flex items-center gap-4 text-sm mt-4">
                         <div className="flex items-center gap-x-2">
-                            <input type="radio" name="radio-1" className="radio" /> Accept
+                            <input type="radio" name="status" className="radio" value={'accepted'} checked={selectedStatus === 'accepted'} onChange={handleRadioChange} /> Accept
                         </div>
 
                         <div className="flex items-center gap-x-2">
-                            <input type="radio" name="radio-1" className="radio" /> Reject
+                            <input type="radio" name="status" className="radio" value={'rejected'} checked={selectedStatus === 'rejected'} onChange={handleRadioChange} /> Reject
                         </div>
                     </div>
                 </div>
