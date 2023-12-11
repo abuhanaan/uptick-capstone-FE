@@ -5,14 +5,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "app/api/authOptions";
 import { redirect } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 async function getData() {
     const session = await getServerSession(authOptions);
     const token = session.accessToken;
     const baseUrl = process.env.BASE_URL;
-
-    // console.log(baseUrl);
 
     try {
         const response = await fetch(`${baseUrl}/applications?programCategory=${encodeURIComponent('Talent Tech')}`, {

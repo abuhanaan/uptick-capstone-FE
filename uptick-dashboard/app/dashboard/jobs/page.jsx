@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { fetchJobsData } from 'app/utils/api';
 import { signIn } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const Jobs = () => {
@@ -77,6 +78,53 @@ const Jobs = () => {
         fetchDataFromApi();
     }, []);
 
+    function postJob() {
+        const post = async () => {
+            const session = await getSession();
+            console.log(session.accessToken);
+            // const response = await fetch(`https://uptick-teama-capstone.onrender.com/jobs`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${session.accessToken}`
+            //     },
+            //     body: JSON.stringify(formData),
+            // });
+            
+            const response = await axios.post(`https://uptick-teama-capstone.onrender.com/jobs`, formData,  {
+                // method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.accessToken}`
+                },
+                // body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                toast.success(`Job successfully created!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000)
+
+            } else if (response.status === 401) {
+                console.log(response);
+                return router.replace('/');
+            } else {
+                console.log(response);
+                toast.error(`Error creating job, please try again!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+            }
+        }
+
+        post();
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -90,74 +138,7 @@ const Jobs = () => {
         } else {
             console.log(formData);
 
-            getSession()
-                .then(session => {
-                    if (!session) {
-                        return signIn();
-                    }
-
-                    console.log('TOKEN: ', session.accessToken);
-                    axios.post('https://uptick-teama-capstone.onrender.com/jobs', formData, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${session.accessToken}`
-                        }
-                    })
-                        .then(response => {
-                            console.log('Job created successfully:', response.data);
-                            toast.success('Job created successfully', {
-                                position: toast.POSITION.TOP_CENTER,
-                                autoClose: 2000,
-                            });
-
-                        })
-                        .catch(error => {
-                            console.error('Error creating job:', error.response || error);
-                            toast.error('Error creating job', {
-                                position: toast.POSITION.TOP_CENTER,
-                                autoClose: 2000,
-                            });
-                        });
-                })
-
-            // getSession()
-            //     .then(session => {
-            //         if (!session.accessToken) {
-            //             return signIn();
-            //         }
-
-            //         return fetch('https://uptick-teama-capstone.onrender.com/jobs', {
-            //             method: 'POST',
-            //             headers: {
-            //                 'Content-Type': 'application/json',
-            //                 'Authorization': `Bearer ${session.accessToken}`
-            //             },
-            //             body: JSON.stringify(formData),
-            //         });
-            //     })
-            //     .then(response => {
-            //         if (response.ok) {
-            //             console.log('Job created successfully:', response);
-            //             toast.success('Post created successfully', {
-            //                 position: toast.POSITION.TOP_CENTER,
-            //                 autoClose: 2000,
-            //             });
-            //         } else {
-            //             console.error('Error creating job:', response);
-            //             toast.error('Error creating job', {
-            //                 position: toast.POSITION.TOP_CENTER,
-            //                 autoClose: 2000,
-            //             });
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.error('Error creating job:', error);
-            //         toast.error('Error creating job', {
-            //             position: toast.POSITION.TOP_CENTER,
-            //             autoClose: 2000,
-            //         });
-            //     });
-
+            postJob();
         }
     }
 
