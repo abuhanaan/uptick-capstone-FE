@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
 import { fetchProgramApplicants } from 'app/utils/api';
 import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/router';
 import { EmptySearch } from 'app/components/empty-search';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,10 +23,16 @@ const Program = ({ params }) => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedApplicant, setSelectedApplicant] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('pending');
     const router = useRouter();
+    // const reloader = useRouter();
+    const baseUrl = process.env.BASE_URL;
 
     const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
+
+    useEffect(() => {
+        setSelectedStatus(selectedApplicant?.status);
+    }, [selectedApplicant]);
 
     useEffect(() => {
         const fetchDataFromApi = async () => {
@@ -60,10 +67,12 @@ const Program = ({ params }) => {
         }));
         setIsConfirmOpen(false);
 
-        toast.success(`Applicant ${selectedStatus} successfully`, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-        });
+        // toast.success(`Applicant ${selectedStatus} successfully`, {
+        //     position: toast.POSITION.TOP_CENTER,
+        //     autoClose: 2000,
+        // });
+
+        updateApplicantStatus();
     }
 
     function handleRadioChange(e) {
@@ -72,7 +81,42 @@ const Program = ({ params }) => {
         setIsConfirmOpen(true);
     }
 
-    console.log(selectedApplicant);
+    function updateApplicantStatus() {
+        const applicantId = selectedApplicant.id;
+        const updateRemoteStatus = async () => {
+            const session = await getSession();
+            console.log(selectedStatus);
+            const response = await fetch(`https://uptick-teama-capstone.onrender.com/applications/${applicantId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.accessToken}`
+                },
+                body: JSON.stringify({status: selectedStatus}),
+            });
+
+            if (response.ok) {
+                toast.success(`Applicant ${selectedStatus} successfully`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000)
+
+            } else {
+                toast.error(`Error updating applicant status`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+            }
+
+            // console.log(response);
+        }
+
+        updateRemoteStatus();
+    }
 
     if (loading) {
         return (
@@ -91,7 +135,7 @@ const Program = ({ params }) => {
 
     return (
         <div className='mt-6'>
-
+            <ToastContainer />
             <div className="flex flex-col items-start gap-y-2 lg:flex-row lg:justify-between lg:items-center lg:mb-6">
                 <div className="text-2xl breadcrumbs font-bold">
                     <ul>
@@ -197,7 +241,6 @@ const Program = ({ params }) => {
 
             {/* Applicant's Details Modal */}
             <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
-                <ToastContainer />
                 <div className="flex flex-col gap-y-3 pb-3">
                     <Link href={selectedApplicant?.resume} target='_blank' className="btn bg-[#999999] text-white self-start">
                         Download Resume/CV
@@ -294,6 +337,10 @@ const Program = ({ params }) => {
                     <div className="flex items-center gap-4 text-sm mt-4">
                         <div className="flex items-center gap-x-2">
                             <input type="radio" name="status" className="radio" value={'accepted'} checked={selectedStatus === 'accepted'} onChange={handleRadioChange} /> Accept
+                        </div>
+
+                        <div className="flex items-center gap-x-2">
+                            <input type="radio" name="status" className="radio" value={'pending'} checked={selectedStatus === 'pending'} onChange={handleRadioChange} /> Pending
                         </div>
 
                         <div className="flex items-center gap-x-2">

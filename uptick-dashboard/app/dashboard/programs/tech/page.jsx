@@ -13,8 +13,6 @@ async function getData() {
     const token = session.accessToken;
     const baseUrl = process.env.BASE_URL;
 
-    // console.log(baseUrl);
-
     try {
         const response = await fetch(`${baseUrl}/applications?programCategory=${encodeURIComponent('Talent Tech')}`, {
             method: 'GET',

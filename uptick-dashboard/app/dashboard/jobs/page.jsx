@@ -128,12 +128,12 @@ const Jobs = () => {
             //         }
 
             //         return fetch('https://uptick-teama-capstone.onrender.com/jobs', {
-            //             method: 'POST',
-            //             headers: {
-            //                 'Content-Type': 'application/json',
-            //                 'Authorization': `Bearer ${session.accessToken}`
-            //             },
-            //             body: JSON.stringify(formData),
+                        // method: 'POST',
+                        // headers: {
+                        //     'Content-Type': 'application/json',
+                        //     'Authorization': `Bearer ${session.accessToken}`
+                        // },
+                        // body: JSON.stringify(formData),
             //         });
             //     })
             //     .then(response => {
