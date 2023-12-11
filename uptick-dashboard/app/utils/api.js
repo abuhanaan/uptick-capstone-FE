@@ -1,6 +1,7 @@
+import {redirect} from 'next/navigation';
 
 export const fetchJobsData = (accessToken) => {
-    return fetch(`https://upthick-talent-teama.onrender.com/jobs?openJobs=true&closedJobs=true`, {
+    return fetch(`https://uptick-teama-capstone.onrender.com/jobs?openJobs=true&closedJobs=true`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +22,7 @@ export const fetchJobsData = (accessToken) => {
 };
 
 export const fetchBlogPosts = (accessToken) => {
-    return fetch(`https://upthick-talent-teama.onrender.com/posts`, {
+    return fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -31,37 +32,46 @@ export const fetchBlogPosts = (accessToken) => {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to fetch data');
+                // throw new Error('Failed to fetch data');
+                return {error: 'Failed to fetch data'};
             }
             return response.json();
         })
         .catch(error => {
             console.error('An error occurred during data fetch:', error);
-            throw error;
+            // throw error;
+            return {error: `Error ${error}`};
         });
 };
 
-export const createPost = (accessToken, data) => {
-    return fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
-        method: 'POST',
+export const fetchProgramApplicants = (accessToken, program) => {
+    let programTitle = encodeURIComponent(program.replace(/\b\w/g, match => match.toUpperCase()));
+    programTitle = programTitle === 'Ai%20%26%20Data' ? 'AI%20%26%20Data' : programTitle;
+
+    return fetch(`https://uptick-teama-capstone.onrender.com/applications?programType=${programTitle}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(data),
+        next: { revalidate: 1200 },
     })
         .then(response => {
-            if (response.ok) {
-                console.log('Post created successfully:', response);
-                addToast('Post created successfully', { appearance: 'success' });
-            } else {
-                console.error('Error creating post:', response);
-                addToast('Error creating post', { appearance: 'error' });
+            if (!response.ok) {
+                // throw new Error('Failed to fetch data');
+                // console.log(response)
+                if (response.status === 401) {
+                    // return redirect('/')
+                    return {authError: 'Unauthorized'};
+                }
+                return {error: 'Failed to fetch data'};
             }
+            return response.json();
         })
         .catch(error => {
-            console.error('Error creating post:', error);
-            addToast('Error creating post', { appearance: 'error' });
+            console.error('An error occurred during data fetch:', error);
+            // throw error;
+            return {error: `Error ${error}`};
         });
 };
 

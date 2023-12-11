@@ -6,7 +6,11 @@ import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-i
 import clsx from 'clsx';
 import ViewDetailsBtn from '../../../../components/view-details-btn';
 import Modal from '../../../../components/modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSession } from 'next-auth/react';
+import { fetchProgramApplicants } from 'app/utils/api';
+import { useRouter } from 'next/navigation';
+import { EmptySearch } from 'app/components/empty-search';
 
 const Program = ({ params }) => {
     const applicants = [
@@ -21,8 +25,56 @@ const Program = ({ params }) => {
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [selectedApplicant, setSelectedApplicant] = useState(null);
+    const router = useRouter();
 
-    const programTitle = params.slug.split('-').join(' ');
+    const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
+
+    useEffect(() => {
+        const fetchDataFromApi = async () => {
+            const session = await getSession();
+
+            if (session.accessToken) {
+                const response = await fetchProgramApplicants(session.accessToken, programTitle);
+
+                if (response.authError) {
+                    return router.replace('/');
+                }
+
+                if (response.error) {
+                    setError(response.error);
+                    setLoading(false)
+                }
+
+                setData(response);
+                setLoading(false);
+            } else {
+                return router.replace('/');
+            }
+        };
+
+        fetchDataFromApi();
+    }, []);
+
+    // console.log(selectedApplicant);
+
+    if (loading) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">Loading...</div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full mx-auto mt-20">
+                <p>Something went wrong :(</p>
+                <p>{error}</p>
+            </div>
+        )
+    }
 
     return (
         <div className='mt-6'>
@@ -30,7 +82,7 @@ const Program = ({ params }) => {
                 <div className="text-2xl breadcrumbs font-bold">
                     <ul>
                         <li className='text-[#C8D7FF]'><Link href='/dashboard/programs/tech'>Talent Tech</Link></li>
-                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle}</Link></li>
+                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle === 'Ai & Data' ? 'AI & Data' : programTitle}</Link></li>
                     </ul>
                 </div>
 
@@ -41,109 +93,162 @@ const Program = ({ params }) => {
             </div>
 
             <div>
-                <div className="overflow-x-auto overflow-y-hidden flex flex-col">
-                    <table className="table table-fixed border-separate border-spacing-y-4">
-                        <thead>
-                            <tr>
-                                <th className="text-lg font-semibold text-black">Name</th>
-                                <th className="text-lg font-semibold text-black">Track</th>
-                                <th className="text-lg font-semibold text-black">Status</th>
-                                <th className="text-lg font-semibold text-black">Date</th>
-                                <th className=""></th>
-                            </tr>
-                        </thead>
-                        <tbody className="">
-                            {
-                                applicants.map(applicant => (
-                                    <tr key={applicant.id} className="bg-white">
-                                        <td className="">{applicant.name}</td>
-                                        <td className="">{applicant.track}</td>
-                                        <td className="">
-                                            <span className={clsx('rounded-full px-2 py-1 inline-block w-20 text-center',
-                                                {
-                                                    'bg-[#BBF5E7]': applicant.status === 'Accepted',
-                                                    'bg-[#FF3434] text-[#F9FAFB]': applicant.status === 'Rejected',
-                                                    'bg-[#E6E6E6]': applicant.status === 'Pending'
-                                                }
-                                            )}>
-                                                {applicant.status}
-                                            </span>
-                                        </td>
-                                        <td className="">{applicant.date}</td>
-                                        <th className="text-end">
-                                            <ViewDetailsBtn toggleModal={setIsModalOpen}>View details</ViewDetailsBtn>
-                                        </th>
+                {
+                    data?.length === 0 ?
+                        <EmptySearch headers={['Name', 'Track', 'Status', 'Date']} /> :
+                        <div className="overflow-x-auto overflow-y-hidden flex flex-col">
+                            <table className="table table-fixed border-separate border-spacing-y-4">
+                                <thead>
+                                    <tr>
+                                        <th className="text-lg font-semibold text-black">Name</th>
+                                        <th className="text-lg font-semibold text-black">Track</th>
+                                        <th className="text-lg font-semibold text-black">Status</th>
+                                        <th className="text-lg font-semibold text-black">Date</th>
+                                        <th className=""></th>
                                     </tr>
-                                ))
+                                </thead>
+                                <tbody className="">
+                                    {
+                                        data?.map(applicant => (
+                                            <tr key={applicant.id} className="bg-white">
+                                                <td className="">{applicant.firstname} {applicant.lastName}</td>
+                                                <td className="">{applicant.track}</td>
+                                                <td className="">
+                                                    <span className={clsx('rounded-full px-2 py-1 inline-block w-20 text-center capitalize',
+                                                        {
+                                                            'bg-[#BBF5E7]': applicant.status === 'accepted',
+                                                            'bg-[#FF3434] text-[#F9FAFB]': applicant.status === 'rejected',
+                                                            'bg-[#E6E6E6]': applicant.status === 'pending'
+                                                        }
+                                                    )}>
+                                                        {applicant.status}
+                                                    </span>
+                                                </td>
+                                                <td className="">
+                                                    {
+                                                        new Date(applicant.applicationDate).toLocaleDateString('en-GB', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric'
+                                                        })
+                                                    }
+                                                </td>
+                                                <th className="text-end">
+                                                    <ViewDetailsBtn toggleModal={setIsModalOpen} applicant={applicant} setSelectedApplicant={setSelectedApplicant}>View details</ViewDetailsBtn>
+                                                </th>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                            {
+                                data.length > 10 &&
+                                <div className="flex items-stretch text-gray-400 self-end">
+                                    <button className="px-2"><MdOutlineKeyboardArrowLeft /></button>
+                                    <button className="bg-[#477BFF] text-white rounded  hover:bg-blue-500 hover:text-white px-2">1</button>
+                                    <button className="px-2 hover:bg-blue-500 hover:text-white rounded">2</button>
+                                    <button className="px-2  hover:bg-blue-500 hover:text-white">...</button>
+                                    <button className="px-2  hover:bg-blue-500 hover:text-white">10</button>
+                                    <button className="px-2 text-blue-500"><MdOutlineKeyboardArrowRight /></button>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                    <div className="flex items-stretch text-gray-400 self-end">
-                        <button className="px-2"><MdOutlineKeyboardArrowLeft /></button>
-                        <button className="bg-[#477BFF] text-white rounded  hover:bg-blue-500 hover:text-white px-2">1</button>
-                        <button className="px-2 hover:bg-blue-500 hover:text-white rounded">2</button>
-                        <button className="px-2  hover:bg-blue-500 hover:text-white">...</button>
-                        <button className="px-2  hover:bg-blue-500 hover:text-white">10</button>
-                        <button className="px-2 text-blue-500"><MdOutlineKeyboardArrowRight /></button>
-                    </div>
-                </div>
+                        </div>
+                }
             </div>
 
             {/* Applicant's Details Modal */}
             <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
                 <div className="flex flex-col gap-y-3 pb-3">
-                    <button className="btn bg-[#999999] text-white self-start">
+                    <Link href={selectedApplicant?.resume} target='_blank' className="btn bg-[#999999] text-white self-start">
                         Download Resume/CV
-                    </button>
+                    </Link>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Full Name</h3>
-                        <p className="text-[#5988FF]">Oreoluwa Christopher</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.firstname} {selectedApplicant?.lastName}</p>
                     </div>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Email</h3>
-                        <p className="text-[#5988FF]">oreoluwa@yahoo.com</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.email}</p>
                     </div>
 
                     <div className="text-sm">
                         <h3 className="mb-1">Phone Number</h3>
-                        <p className="text-[#5988FF]">+234 901 777 9568</p>
+                        <p className="text-[#5988FF]">{selectedApplicant?.phone}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Current company</h3>
-                        <p className="text-[#5988FF]">CitiServe, Lagos</p>
+                        <h3 className="mb-1">Residential Address</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.address}, {selectedApplicant?.city}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">LinkedIn URL</h3>
-                        <Link href='https://linkedin.com/in/oreoluwa' className="text-[#5988FF]">https://linkedin.com/in/oreoluwa</Link>
+                        <h3 className="mb-1">Application Date</h3>
+                        <p className="text-[#5988FF]">
+                            {
+                                new Date(selectedApplicant?.applicationDate).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                })
+                            }
+                        </p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Twitter URL</h3>
-                        <Link href='https://twitter.com/oreoluwa' className="text-[#5988FF]">https://twitter.com/oreoluwa</Link>
+                        <h3 className="mb-1">Availability</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.availability}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Github URL</h3>
-                        <Link href='https://github.com/oreoluwa' className="text-[#5988FF]">https://github.com/oreoluwa</Link>
+                        <h3 className="mb-1">Career Goal</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.careerGoals}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Portfolio URL</h3>
-                        <Link href='https://portfolio.com' className="text-[#5988FF]">https://portfolio.com</Link>
+                        <h3 className="mb-1">GitHub Link</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.githubLink}</p>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1">Other Websites</h3>
-                        <Link href='https://otherwebsites.com' className="text-[#5988FF]">https://otherwebsites.com</Link>
+                        <h3 className="mb-1">Portfolio Link / Link to Previous Project</h3>
+                        <Link href={selectedApplicant?.portfolioLink} className="text-[#5988FF]">{selectedApplicant?.portfolioLink}</Link>
                     </div>
 
                     <div className="text-sm">
-                        <h3 className="mb-1 capitalize">Additional Information</h3>
-                        <p className="text-[#5988FF]">Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants... Information that will make you stand out and prioritized over other applicants...</p>
+                        <h3 className="mb-1">Program Category</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.programCategory}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Program Type</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.programType}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Status</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.status}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Track</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.track}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Type</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.type}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Years of Experience</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.yearsOfExp}</p>
+                    </div>
+
+                    <div className="text-sm">
+                        <h3 className="mb-1">Fellowship Info</h3>
+                        <p className="text-[#5988FF]">{selectedApplicant?.fellowshipInfo}</p>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm mt-4">

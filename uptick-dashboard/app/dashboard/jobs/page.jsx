@@ -47,7 +47,7 @@ const Jobs = () => {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const baseUrl = process.env.NEXT_BASE_URL;
-    console.log(baseUrl);
+    // console.log(baseUrl);
 
     useEffect(() => {
         const fetchDataFromApi = () => {
