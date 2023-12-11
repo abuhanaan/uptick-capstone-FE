@@ -13,6 +13,7 @@ import { fetchProgramApplicants } from 'app/utils/api';
 import { useRouter } from 'next/navigation';
 import { EmptySearch } from 'app/components/empty-search';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Program = ({ params }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);

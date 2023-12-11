@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { fetchBlogPosts, createPost } from 'app/utils/api';
 import { signIn } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const Blog = () => {
