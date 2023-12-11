@@ -1,7 +1,7 @@
 import { Inter, Raleway } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from './Providers';
-import { authOptions } from "app/api/auth/[...nextauth]/route";
+import { authOptions } from "app/api/authOptions";
 import { getServerSession } from "next-auth/next"
 
 const inter = Inter({ subsets: ['latin'] });

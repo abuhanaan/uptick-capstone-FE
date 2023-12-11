@@ -6,7 +6,7 @@ import PieChart from '../components/dashboard/pie-chart';
 import Link from 'next/link';
 import Welcome from '../components/dashboard/welcome';
 import { getSession, useSession } from 'next-auth/react';
-import { authOptions } from 'app/api/auth/[...nextauth]/route';
+import { authOptions } from 'app/api/authOptions';
 import ViewDetailsBtn from "app/components/view-details-btn";
 import Modal from 'app/components/modal';
 import { getServerSession } from "next-auth";
@@ -15,12 +15,10 @@ import { redirect } from 'next/navigation';
 async function getData() {
     const session = await getServerSession(authOptions);
     const token = session.accessToken;
-    const baseUrl = process.env.NEXT_BASE_URL;
-
-    console.log(baseUrl);
+    const baseUrl = process.env.BASE_URL;
 
     try {
-        const response = await fetch(`https://upthick-talent-teama.onrender.com/admin/home`, {
+        const response = await fetch(`${baseUrl}/admin/home`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,15 +26,14 @@ async function getData() {
             },
             next: { revalidate: 240 },
         });
-    
+
         if (response.status === 401 || response.statusText === 'Unauthorized') {
-            redirect('/');
+            return { authError: 'Unauthorized' };
         }
-    
+
         return response.json();
     } catch (error) {
-        console.log(error);
-        throw new Error(error.message);
+        return { error: error }
     }
 }
 
@@ -47,9 +44,27 @@ const Dashboard = async () => {
         bgColor: ['#0E1933', '#2B4A99', '#A3BDFF']
     };
 
-    const { stats, recentApplicants, recentJobs } = await getData();
-    // const data = await getData();
-    // console.log(data);
+    const data = await getData();
+
+    if (data.authError) {
+        toast.error(`Please login to continue`, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+        });
+        return redirect('/');
+    } else if (data.error) {
+        toast.error(
+            `
+                An error occurred, please try again.
+                ${data.error}
+            `,
+            {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+    }
+
+    const { stats, recentApplicants, recentJobs } = data;
 
     const cardData = [
         { type: 'Programs', total: stats.programApplicants, accepted: stats.acceptedprogramApplications, rejected: stats.rejectedprogramApplications, pending: stats.pendingprogramApplications, icon: RiEditBoxLine },

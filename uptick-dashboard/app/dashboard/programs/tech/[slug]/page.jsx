@@ -6,7 +6,11 @@ import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-i
 import clsx from 'clsx';
 import ViewDetailsBtn from '../../../../components/view-details-btn';
 import Modal from '../../../../components/modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSession } from 'next-auth/react';
+import { fetchProgramApplicants } from 'app/utils/api';
+import { useRouter } from 'next/navigation';
+import { EmptySearch } from 'app/components/empty-search';
 
 const Program = ({ params }) => {
     const applicants = [
@@ -21,8 +25,58 @@ const Program = ({ params }) => {
     ];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
-    const programTitle = params.slug.split('-').join(' ');
+    const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
+
+    useEffect(() => {
+        const fetchDataFromApi = async () => {
+            const session = await getSession();
+
+            if (session.accessToken) {
+                const response = await fetchProgramApplicants(session.accessToken, programTitle);
+
+                if (response.authError) {
+                    router.replace('/');
+                }
+
+                if (response.error) {
+                    setError(response.error);
+                    setLoading(false)
+                    return;
+                }
+
+                setData(response);
+                setLoading(false);
+
+                console.log(response)
+            } else {
+                router.replace('/');
+            }
+        };
+
+        fetchDataFromApi();
+    }, []);
+
+    // console.log(data);
+
+    if (loading) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">Loading...</div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="font-semibold text-xl h-screen w-full flex justify-center mt-20">
+                <p>Something went wrong :(</p>
+                <p>{error}</p>
+            </div>
+        )
+    }
 
     return (
         <div className='mt-6'>
@@ -30,7 +84,7 @@ const Program = ({ params }) => {
                 <div className="text-2xl breadcrumbs font-bold">
                     <ul>
                         <li className='text-[#C8D7FF]'><Link href='/dashboard/programs/tech'>Talent Tech</Link></li>
-                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle}</Link></li>
+                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle === 'Ai & Data' ? 'AI & Data' : programTitle}</Link></li>
                     </ul>
                 </div>
 
@@ -41,56 +95,71 @@ const Program = ({ params }) => {
             </div>
 
             <div>
-                <div className="overflow-x-auto overflow-y-hidden flex flex-col">
-                    <table className="table table-fixed border-separate border-spacing-y-4">
-                        <thead>
-                            <tr>
-                                <th className="text-lg font-semibold text-black">Name</th>
-                                <th className="text-lg font-semibold text-black">Track</th>
-                                <th className="text-lg font-semibold text-black">Status</th>
-                                <th className="text-lg font-semibold text-black">Date</th>
-                                <th className=""></th>
-                            </tr>
-                        </thead>
-                        <tbody className="">
-                            {
-                                applicants.map(applicant => (
-                                    <tr key={applicant.id} className="bg-white">
-                                        <td className="">{applicant.name}</td>
-                                        <td className="">{applicant.track}</td>
-                                        <td className="">
-                                            <span className={clsx('rounded-full px-2 py-1 inline-block w-20 text-center',
-                                                {
-                                                    'bg-[#BBF5E7]': applicant.status === 'Accepted',
-                                                    'bg-[#FF3434] text-[#F9FAFB]': applicant.status === 'Rejected',
-                                                    'bg-[#E6E6E6]': applicant.status === 'Pending'
-                                                }
-                                            )}>
-                                                {applicant.status}
-                                            </span>
-                                        </td>
-                                        <td className="">{applicant.date}</td>
-                                        <th className="text-end">
-                                            <ViewDetailsBtn toggleModal={setIsModalOpen}>View details</ViewDetailsBtn>
-                                        </th>
+                {
+                    data?.length === 0 ?
+                        <EmptySearch headers={['Name', 'Track', 'Status', 'Date']} /> :
+                        <div className="overflow-x-auto overflow-y-hidden flex flex-col">
+                            <table className="table table-fixed border-separate border-spacing-y-4">
+                                <thead>
+                                    <tr>
+                                        <th className="text-lg font-semibold text-black">Name</th>
+                                        <th className="text-lg font-semibold text-black">Track</th>
+                                        <th className="text-lg font-semibold text-black">Status</th>
+                                        <th className="text-lg font-semibold text-black">Date</th>
+                                        <th className=""></th>
                                     </tr>
-                                ))
+                                </thead>
+                                <tbody className="">
+                                    {
+                                        data?.map(applicant => (
+                                            <tr key={applicant.id} className="bg-white">
+                                                <td className="">{applicant.firstname} {applicant.lastName}</td>
+                                                <td className="">{applicant.track}</td>
+                                                <td className="">
+                                                    <span className={clsx('rounded-full px-2 py-1 inline-block w-20 text-center capitalize',
+                                                        {
+                                                            'bg-[#BBF5E7]': applicant.status === 'accepted',
+                                                            'bg-[#FF3434] text-[#F9FAFB]': applicant.status === 'rejected',
+                                                            'bg-[#E6E6E6]': applicant.status === 'pending'
+                                                        }
+                                                    )}>
+                                                        {applicant.status}
+                                                    </span>
+                                                </td>
+                                                <td className="">
+                                                    {
+                                                        new Date(applicant.applicationDate).toLocaleDateString('en-GB', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric'
+                                                        })
+                                                    }
+                                                </td>
+                                                <th className="text-end">
+                                                    <ViewDetailsBtn toggleModal={setIsModalOpen} applicantId={applicant.id}>View details</ViewDetailsBtn>
+                                                </th>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                            {
+                                data.length > 10 &&
+                                <div className="flex items-stretch text-gray-400 self-end">
+                                    <button className="px-2"><MdOutlineKeyboardArrowLeft /></button>
+                                    <button className="bg-[#477BFF] text-white rounded  hover:bg-blue-500 hover:text-white px-2">1</button>
+                                    <button className="px-2 hover:bg-blue-500 hover:text-white rounded">2</button>
+                                    <button className="px-2  hover:bg-blue-500 hover:text-white">...</button>
+                                    <button className="px-2  hover:bg-blue-500 hover:text-white">10</button>
+                                    <button className="px-2 text-blue-500"><MdOutlineKeyboardArrowRight /></button>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                    <div className="flex items-stretch text-gray-400 self-end">
-                        <button className="px-2"><MdOutlineKeyboardArrowLeft /></button>
-                        <button className="bg-[#477BFF] text-white rounded  hover:bg-blue-500 hover:text-white px-2">1</button>
-                        <button className="px-2 hover:bg-blue-500 hover:text-white rounded">2</button>
-                        <button className="px-2  hover:bg-blue-500 hover:text-white">...</button>
-                        <button className="px-2  hover:bg-blue-500 hover:text-white">10</button>
-                        <button className="px-2 text-blue-500"><MdOutlineKeyboardArrowRight /></button>
-                    </div>
-                </div>
+                        </div>
+                }
             </div>
 
             {/* Applicant's Details Modal */}
-            <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen}>
+            <Modal isOpen={isModalOpen} toggleModal={setIsModalOpen} data={data}>
                 <div className="flex flex-col gap-y-3 pb-3">
                     <button className="btn bg-[#999999] text-white self-start">
                         Download Resume/CV
