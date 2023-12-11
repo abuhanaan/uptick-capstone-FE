@@ -37,9 +37,52 @@ const Blog = () => {
     });
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
-    const baseUrl = process.env.NEXT_BASE_URL;
+    const baseUrl = process.env.BASE_URL;
 
-    console.log(baseUrl);
+    function submitPost(data) {
+        const submit = async () => {
+            const session = await getSession();
+            console.log(session.accessToken);
+            // const response = await fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${session.accessToken}`
+            //     },
+            //     body: JSON.stringify(data),
+            // });
+
+            const response = await axios.post(`https://uptick-teama-capstone.onrender.com/posts`, data,  {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.accessToken}`
+                },
+            });
+
+            if (response.ok) {
+                toast.success(`Post successfully created!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000)
+
+            } else if (response.status === 401) {
+                console.log(response);
+                return router.replace('/');
+            } else {
+                console.log(response);
+                toast.error(`Error creating post, please try again!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                });
+            }
+        }
+
+        submit();
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -67,77 +110,7 @@ const Blog = () => {
 
             console.log(postData);
 
-            // getSession()
-            //     .then(session => {
-            //         if (!session) {
-            //             return signIn();
-            //         }
-
-                    // console.log('TOKEN: ', session.accessToken);
-                    // axios.post('https://uptick-teama-capstone.onrender.com/posts', postData, {
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'Authorization': `Bearer ${session.accessToken}`
-                    //     }
-                    // })
-                    //     .then(response => {
-                    //         console.log('Post created successfully:', response.data);
-                    //         toast.success('Post created successfully', {
-                    //             position: toast.POSITION.TOP_CENTER,
-                    //             autoClose: 2000,
-                    //         });
-
-                    //     })
-                    //     .catch(error => {
-                    //         console.error('Error creating post:', error.response || error);
-                    //         toast.error('Error creating post', {
-                    //             position: toast.POSITION.TOP_CENTER,
-                    //             autoClose: 2000,
-                    //         });
-                    //     });
-            //     })
-
-            getSession()
-                .then(session => {
-                    if (!session.accessToken) {
-                        // router.replace('/');
-                        return signIn();
-                    }
-
-                    console.log('TOKEN: ', session.accessToken);
-                    return fetch('https://uptick-teama-capstone.onrender.com/posts', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${session.accessToken}`
-                        },
-                        body: JSON.stringify(postData),
-                    });
-                })
-                .then(response => {
-                    console.log(response)
-                    if (response.ok) {
-                        console.log('Post created successfully:', response);
-                        toast.success('Post created successfully', {
-                            position: toast.POSITION.TOP_CENTER,
-                            autoClose: 2000,
-                        });
-                    } else {
-                        console.error('Error creating post:', response);
-                        toast.error('Error creating post', {
-                            position: toast.POSITION.TOP_CENTER,
-                            autoClose: 2000,
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error creating post:', error);
-                    toast.error('Error creating post', {
-                        position: toast.POSITION.TOP_CENTER,
-                        autoClose: 1000,
-                    });
-                });
-
+            submitPost(postData);
         }
     }
 
