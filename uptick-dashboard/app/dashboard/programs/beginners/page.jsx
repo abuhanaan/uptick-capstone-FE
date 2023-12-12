@@ -1,12 +1,64 @@
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
 import { HiOutlinePlus } from "react-icons/hi";
 import Link from 'next/link';
+import { getServerSession } from "next-auth";
+import { authOptions } from "app/api/authOptions";
+import { redirect } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+async function getData() {
+    const session = await getServerSession(authOptions);
+    const token = session.accessToken;
+    const baseUrl = process.env.BASE_URL;
 
-const TalentBeginners = () => {
-    const programsData = [
-        { id: 1, slug: 'web-development-fundamentals', title: 'Web Development Fundamentals', totalApplicants: 200 },
-    ];
+    try {
+        const response = await fetch(`${baseUrl}/applications?programCategory=${encodeURIComponent('Talent Beginners')}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            next: { revalidate: 240 },
+        });
+
+        if (response.status === 401 || response.statusText === 'Unauthorized') {
+            return { authError: 'Unauthorized' };
+        }
+
+        return response.json();
+    } catch (err) {
+        return { error: err };
+    }
+}
+
+const TalentBeginners = async () => {
+    const data = await getData();
+
+    if (data.authError) {
+        toast.error(`Please login to continue`, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+        });
+        return redirect('/');
+    } else if (data.error) {
+        toast.error(
+            `
+                An error occurred, please try again.
+                ${data.error}
+            `,
+            {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+    }
+
+    const programsData = Object.entries(data).map(([title, totalApplicants], index) => ({
+        id: index + 1,
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        title,
+        totalApplicants
+    }));
 
     return (
         <div className="mt-6 min-h-screen">

@@ -1,15 +1,70 @@
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
 import { HiOutlinePlus } from "react-icons/hi";
 import Link from 'next/link';
+import { getServerSession } from "next-auth";
+import { authOptions } from "app/api/authOptions";
+import { redirect } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
-const TalentMap = () => {
-    const programsData = [
-        { id: 1, slug: 'software-engineering', title: 'Software Engineering', totalApplicants: 200 },
-    ];
+async function getData() {
+    const session = await getServerSession(authOptions);
+    const token = session.accessToken;
+    const baseUrl = process.env.BASE_URL;
+
+    try {
+        const response = await fetch(`${baseUrl}/applications?programCategory=${encodeURIComponent('Talent Map')}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            next: { revalidate: 240 },
+        });
+
+        if (response.status === 401 || response.statusText === 'Unauthorized') {
+            return { authError: 'Unauthorized' };
+        }
+
+        return response.json();
+    } catch (err) {
+        return { error: err };
+    }
+}
+
+const TalentMap = async () => {
+    const data = await getData();
+
+    if (data.authError) {
+        toast.error(`Please login to continue`, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+        });
+        return redirect('/');
+    } else if (data.error) {
+        toast.error(
+            `
+                An error occurred, please try again.
+                ${data.error}
+            `,
+            {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
+    }
+
+    const programsData = Object.entries(data).map(([title, totalApplicants], index) => ({
+        id: index + 1,
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        title,
+        totalApplicants
+    }));
 
     return (
         <div className="mt-6 min-h-screen">
+            <ToastContainer />
+
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Talent Map</h1>
 
