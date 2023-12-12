@@ -43,21 +43,22 @@ const Blog = () => {
         const submit = async () => {
             const session = await getSession();
             console.log(session.accessToken);
-            // const response = await fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${session.accessToken}`
-            //     },
-            //     body: JSON.stringify(data),
-            // });
-
-            const response = await axios.post(`https://uptick-teama-capstone.onrender.com/posts`, data,  {
+            console.log(data.file);
+            const response = await fetch(`https://uptick-teama-capstone.onrender.com/posts`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${session.accessToken}`
                 },
+                body: JSON.stringify(data),
             });
+
+            // const response = await axios.post(`https://uptick-teama-capstone.onrender.com/posts`, data,  {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${session.accessToken}`
+            //     },
+            // });
 
             if (response.ok) {
                 toast.success(`Post successfully created!`, {

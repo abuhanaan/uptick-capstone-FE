@@ -75,6 +75,34 @@ export const fetchProgramApplicants = (accessToken, program) => {
         });
 };
 
+export const fetchJobApplicants = (accessToken) => {
+    return fetch(`https://uptick-teama-capstone.onrender.com/applications?type=job`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        next: { revalidate: 1200 },
+    })
+        .then(response => {
+            if (!response.ok) {
+                // throw new Error('Failed to fetch data');
+                // console.log(response)
+                if (response.status === 401) {
+                    // return redirect('/')
+                    return {authError: 'Unauthorized'};
+                }
+                return {error: 'Failed to fetch data'};
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('An error occurred during data fetch:', error);
+            // throw error;
+            return {error: `Error ${error}`};
+        });
+};
+
 const str = `
 Even if you don’t meet 100% of the qualifications below, please still consider applying. We believe in
 a holistic approach when evaluating talent for our team.

@@ -1,14 +1,18 @@
-'use client';
-
-// import { useSession } from "next-auth/react";
-
 export default function Welcome() {
-    // const {data: session} = useSession();
+    const formatDate = () => {
+        const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+        const today = new Date();
+        return new Intl.DateTimeFormat('en-US', options).format(today);
+    };
 
     return (
         <div>
             <h1 className="text-2xl font-bold leading-8">Welcome, Admin</h1>
-            <span className="text-sm">Monday, 6th Nov. 2023</span>
+            <span className="text-sm">
+                {
+                    formatDate()
+                }
+            </span>
         </div>
     )
 }

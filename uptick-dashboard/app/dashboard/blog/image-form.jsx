@@ -24,6 +24,8 @@ export default function ImageForm({ setFormData, formData }) {
                         file: image
                     }
                 ));
+                console.log(image);
+                console.log(reader.result);
             }
             reader.readAsDataURL(image);
         }
