@@ -93,7 +93,7 @@ const TalentBeginners = async () => {
                                                     <HiOutlineEllipsisVertical />
                                                 </label>
                                                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                    <li><Link href={`/dashboard/programs/tech/${program.slug}`}>View Applicants</Link></li>
+                                                    <li><Link href={`/dashboard/programs/beginners/${program.slug}`}>View Applicants</Link></li>
                                                     <li><Link href='#'>Open Application</Link></li>
                                                     <li><Link href='#'>Close Application</Link></li>
                                                 </ul>
