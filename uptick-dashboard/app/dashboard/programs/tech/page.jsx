@@ -6,7 +6,6 @@ import { authOptions } from "app/api/authOptions";
 import { redirect } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Button from 'app/components/button';
 
 
 async function getData() {
@@ -91,7 +90,6 @@ const TalentTech = async () => {
                     <HiOutlinePlus size={20} className="stroke-2" />
                     Add New
                 </button>
-                {/* <Button submit={addUser}>Add User</Button> */}
             </div>
 
             <div className="h-full">
