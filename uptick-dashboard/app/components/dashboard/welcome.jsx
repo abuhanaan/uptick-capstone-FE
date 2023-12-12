@@ -1,7 +1,3 @@
-// 'use client';
-
-// import { useSession } from "next-auth/react";
-
 export default function Welcome() {
     const formatDate = () => {
         const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };

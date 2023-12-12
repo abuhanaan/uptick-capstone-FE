@@ -1,9 +1,12 @@
+'use client';
+
 import SideNav from '/app/components/dashboard/sidenav';
 import { FaRegBell } from "react-icons/fa";
 import { HiUser } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import clsx from 'clsx';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 
 const Layout = ({ children }) => {
@@ -45,7 +48,7 @@ const Layout = ({ children }) => {
                             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow w-52">
                                 <li><Link href='#'>Profile</Link></li>
                                 <li><Link href='#'>Settings</Link></li>
-                                <li><Link href='#'>Logout</Link></li>
+                                <li><Link onClick={() => signOut()} href='#'>Logout</Link></li>
                             </ul>
                         </div>
                     </div>
