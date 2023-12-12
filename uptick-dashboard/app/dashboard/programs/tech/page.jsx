@@ -6,6 +6,7 @@ import { authOptions } from "app/api/authOptions";
 import { redirect } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Button from 'app/components/button';
 
 
 async function getData() {
@@ -62,16 +63,35 @@ const TalentTech = async () => {
         totalApplicants
     }));
 
+    // async function addUser() {
+    //     'use server';
+    //     console.log('clicked')
+    //     const response = await fetch('https://uptick-teama-capstone.onrender.com/users', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             "username": "isaac1234",
+    //             "role": "user",
+    //             "password": "isaac1234"
+    //         })
+    //     });
+
+    //     console.log(response);
+    // }
+
     return (
         <div className="mt-6 min-h-screen">
             <ToastContainer />
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#15254C] text-2xl font-bold">Talent Tech</h1>
 
-                <Link href='#' className="btn bg-[#477BFF] text-white">
+                <button href='#' className="btn bg-[#477BFF] text-white">
                     <HiOutlinePlus size={20} className="stroke-2" />
                     Add New
-                </Link>
+                </button>
+                {/* <Button submit={addUser}>Add User</Button> */}
             </div>
 
             <div className="h-full">
