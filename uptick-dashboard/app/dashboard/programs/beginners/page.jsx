@@ -85,7 +85,7 @@ const TalentBeginners = async () => {
                             {
                                 programsData.map(program => (
                                     <tr key={program.id} className="bg-white">
-                                        <td className="py-1"><Link href={`/dashboard/programs/tech/${program.slug}`}>{program.title}</Link></td>
+                                        <td className="py-1"><Link href={`/dashboard/programs/beginners/${program.slug}`}>{program.title}</Link></td>
                                         <td className="py-1">{program.totalApplicants}</td>
                                         <th className="py-1">
                                             <div className="dropdown dropdown-end">

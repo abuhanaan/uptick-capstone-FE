@@ -44,11 +44,13 @@ export const fetchBlogPosts = (accessToken) => {
         });
 };
 
-export const fetchProgramApplicants = (accessToken, program) => {
+export const fetchProgramApplicants = (accessToken, category, program) => {
     let programTitle = encodeURIComponent(program.replace(/\b\w/g, match => match.toUpperCase()));
     programTitle = programTitle === 'Ai%20%26%20Data' ? 'AI%20%26%20Data' : programTitle;
 
-    return fetch(`https://uptick-teama-capstone.onrender.com/applications?programType=${programTitle}`, {
+    const programCategory = encodeURIComponent(category.replace(/\b\w/g, match => match.toUpperCase()));
+
+    return fetch(`https://uptick-teama-capstone.onrender.com/applications?programCategory=${programCategory}&programType=${programTitle}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

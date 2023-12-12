@@ -29,6 +29,7 @@ const Program = ({ params }) => {
     const baseUrl = process.env.BASE_URL;
 
     const programTitle = decodeURIComponent(params.slug.split('-').join(' '));
+    const programCategory = 'Talent Tech';
 
     useEffect(() => {
         setSelectedStatus(selectedApplicant?.status);
@@ -39,7 +40,7 @@ const Program = ({ params }) => {
             const session = await getSession();
 
             if (session.accessToken) {
-                const response = await fetchProgramApplicants(session.accessToken, programTitle);
+                const response = await fetchProgramApplicants(session.accessToken, programCategory, programTitle);
 
                 if (response.authError) {
                     return router.replace('/');
@@ -140,7 +141,7 @@ const Program = ({ params }) => {
                 <div className="text-2xl breadcrumbs font-bold">
                     <ul>
                         <li className='text-[#C8D7FF]'><Link href='/dashboard/programs/tech'>Talent Tech</Link></li>
-                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle === 'Ai & Data' ? 'AI & Data' : programTitle}</Link></li>
+                        <li><Link href={`/dashboard/programs/tech/${params.slug}`} className='capitalize'>{programTitle === 'ai & data' ? 'AI & Data' : programTitle}</Link></li>
                     </ul>
                 </div>
 
